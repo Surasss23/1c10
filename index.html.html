@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> One </title>
+    <title>One</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,34 +36,48 @@
             text-align: center;
             color: #007bff;
         }
+        .image-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
     <div class="content">
         <h1>HIDE IT AFTER EXECUTING</h1>
-        <pre>#include <stdio.h>
-#include <unistd.h>
+        <pre>#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
 int main() {
-int pipefds[2];
-pipe(pipefds);
-//create a child process
-int pid-fork();'
-if(pid=0){
-//child process 
-char buf[100];
-read(pipefds[0],buf,100);
-printf("child received:%s\n",buf);
-close(pipefds[0]);
-close(pipefds[1]);
-}else{
-//paren process
-char buf[]="Hello Feom parent!";
-write(pipefds[1}],buf,sizeof(buf));
-close(pipefds[0]);
-close(pipefds[1]);
-}
-return 0;
+    int pipefds[2];
+    pipe(pipefds);
+    // Create a child process
+    int pid = fork();
+    if(pid == 0) {
+        // Child process 
+        char buf[100];
+        read(pipefds[0], buf, 100);
+        printf("Child received: %s\n", buf);
+        close(pipefds[0]);
+        close(pipefds[1]);
+    } else {
+        // Parent process
+        char buf[] = "Hello From Parent!";
+        write(pipefds[1], buf, sizeof(buf));
+        close(pipefds[0]);
+        close(pipefds[1]);
+    }
+    return 0;
 }</pre>
+
+        <div class="image-container">
+            <img src="https://i.ibb.co/DHq2g48j/Whats-App-Image-2025-03-02-at-8-58-44-PM.jpg" alt="Descriptive Text">
+        </div>
     </div>
 </body>
 </html>
