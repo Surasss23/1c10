@@ -51,32 +51,37 @@
 <body>
     <div class="content">
         <h1>HIDE IT AFTER EXECUTING</h1>
-        <pre>#include &lt;stdio.h&gt;
-#include &lt;unistd.h&gt;
-int main() {
-    int pipefds[2];
-    pipe(pipefds);
-    // Create a child process
-    int pid = fork();
-    if(pid == 0) {
-        // Child process 
-        char buf[100];
-        read(pipefds[0], buf, 100);
-        printf("Child received: %s\n", buf);
-        close(pipefds[0]);
-        close(pipefds[1]);
-    } else {
-        // Parent process
-        char buf[] = "Hello From Parent!";
-        write(pipefds[1], buf, sizeof(buf));
-        close(pipefds[0]);
-        close(pipefds[1]);
-    }
-    return 0;
-}</pre>
+        <pre>
+            1. INTRODUCTION
+In order to eliminate fraud incidence, manual records, time consumption to search for records of various entities, this system is developed. With the help of this system, management can easily and efficiently manage the daily activities in a hotel.
+
+1.1 Purpose
+The main purpose of Hotel Management System (HMS) is to automate and keep track of every transaction like room reservation, room cancellation, payment refund, user details etc. This system helps in monitoring and security of the data.
+
+1.2 Scope
+The user can get to know the details of the hotels and can reserve the rooms directly through mobile (or) through website.
+Hotel Management System (HMS) provides the details hotel location, room availability on different dates.
+2.1.2 Memory Constraints
+Android Version: Nougat (Version: 7.0 minimum)
+3GB RAM
+2.0 GHz processor
+Intel i5
+Windows-7/8/8.1/10
+1TB Hard disk
+2.1.3 Operations
+It includes various data processing, support functions, backup and recovery operations.
+
+2.2 Product Functions
+Login: User, it allows only authorized users to access the system.
+Room availability: It shows the availability of the rooms.
+Hotel details: It consists of details of all hotels.
+Pay amount: It permits the system to calculate and record the amount and method of payment through different methods.
+        </pre>
 
         <div class="image-container">
-            <img src="https://i.ibb.co/DHq2g48j/Whats-App-Image-2025-03-02-at-8-58-44-PM.jpg" alt="Descriptive Text">
+            <img src="https://i.ibb.co/cKmhYdSX/fdb74e05-407d-4dcf-a3cd-e4663d8de9f3.jpg" alt="Descriptive Text">
+            <img src="https://i.ibb.co/nsLRkXKj/461d6ca0-f09d-4590-a7ef-17a22f7c2cbc.jpg" alt="Descriptive Text">
+            <img src="https://i.ibb.co/Ng1sdVxq/26779264-b98b-4f5e-bf6d-c4ababda715e.jpg" alt="Descriptive Text">
         </div>
     </div>
 </body>
