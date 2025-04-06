@@ -72,43 +72,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-public class MD5Digest {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter text to hash: ");
-        String input = scanner.nextLine();
-
-        try {
-            // Create MD5 digest instance
-            MessageDigest md = MessageDigest.getInstance("MD5");
-
-            // Convert input string to bytes and compute hash
-            byte[] messageBytes = input.getBytes();
-            byte[] digest = md.digest(messageBytes);
-
-            // Convert byte array to hexadecimal string
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : digest) {
-                hexString.append(String.format("%02x", b));
-            }
-
-            // Print the MD5 hash
-            System.out.println("MD5 Digest: " + hexString.toString());
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("MD5 Algorithm not found!");
-        }
-
-        scanner.close();
-    }
-}
-        </pre>
-
-        <button class="copy-btn" onclick="copyCode('code2')">Copy 7th One</button>
-        <pre id="code2">
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
-
 public class SHA1Digest {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -138,6 +101,44 @@ public class SHA1Digest {
         scanner.close();
     }
 }
+        </pre>
+
+        <button class="copy-btn" onclick="copyCode('code2')">Copy 7th One</button>
+        <pre id="code2">
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
+
+public class MD5Digest {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter text to hash: ");
+        String input = scanner.nextLine();
+
+        try {
+            // Create MD5 digest instance
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            // Convert input string to bytes and compute hash
+            byte[] messageBytes = input.getBytes();
+            byte[] digest = md.digest(messageBytes);
+
+            // Convert byte array to hexadecimal string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : digest) {
+                hexString.append(String.format("%02x", b));
+            }
+
+            // Print the MD5 hash
+            System.out.println("MD5 Digest: " + hexString.toString());
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("MD5 Algorithm not found!");
+        }
+
+        scanner.close();
+    }
+}
+
         </pre>
 
         <div class="image-container">
