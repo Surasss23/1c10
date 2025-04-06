@@ -79,20 +79,16 @@ public class SHA1Digest {
         String input = scanner.nextLine();
 
         try {
-            // Create SHA-1 digest instance
             MessageDigest md = MessageDigest.getInstance("SHA-1");
-
-            // Convert input string to bytes and compute hash
+            
             byte[] messageBytes = input.getBytes();
             byte[] digest = md.digest(messageBytes);
 
-            // Convert byte array to hexadecimal string
             StringBuilder hexString = new StringBuilder();
             for (byte b : digest) {
                 hexString.append(String.format("%02x", b));
             }
 
-            // Print the SHA-1 hash
             System.out.println("SHA-1 Digest: " + hexString.toString());
         } catch (NoSuchAlgorithmException e) {
             System.out.println("SHA-1 Algorithm not found!");
@@ -116,20 +112,16 @@ public class MD5Digest {
         String input = scanner.nextLine();
 
         try {
-            // Create MD5 digest instance
             MessageDigest md = MessageDigest.getInstance("MD5");
 
-            // Convert input string to bytes and compute hash
             byte[] messageBytes = input.getBytes();
             byte[] digest = md.digest(messageBytes);
 
-            // Convert byte array to hexadecimal string
             StringBuilder hexString = new StringBuilder();
             for (byte b : digest) {
                 hexString.append(String.format("%02x", b));
             }
 
-            // Print the MD5 hash
             System.out.println("MD5 Digest: " + hexString.toString());
         } catch (NoSuchAlgorithmException e) {
             System.out.println("MD5 Algorithm not found!");
