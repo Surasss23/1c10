@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One</title>
+    <title>404 Error</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,18 +19,19 @@
             background: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow-x: auto; /* Enables horizontal scrolling for large content */
+            overflow-x: auto;
         }
         pre {
             background: #e9ecef;
             padding: 15px;
             border-radius: 8px;
             overflow-x: auto;
-            white-space: pre-wrap; /* Wraps text to avoid horizontal scrolling */
-            word-wrap: break-word; /* Ensures long words don't break layout */
+            white-space: pre-wrap;
+            word-wrap: break-word;
             font-family: "Courier New", Courier, monospace;
             font-size: 16px;
             color: #212529;
+            position: relative;
         }
         h1 {
             text-align: center;
@@ -46,12 +47,27 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        .copy-btn {
+            margin-bottom: 10px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div class="content">
-        <h1></h1>
-        <pre>
+        <h1>MD5 & SHA-1 Hash Generator (Java)</h1>
+
+        <button class="copy-btn" onclick="copyCode('code1')">Copy MD5 Code</button>
+        <pre id="code1">
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -85,19 +101,21 @@ public class MD5Digest {
         scanner.close();
     }
 }
-</pre>
-        <pre>
+        </pre>
+
+        <button class="copy-btn" onclick="copyCode('code2')">Copy SHA-1 Code</button>
+        <pre id="code2">
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
-public class SHA1Digest 
-{
-    public static void main(String[] args) 
-{
-       	 Scanner scanner = new Scanner(System.in);
- System.out.print("Enter text to hash: ");
-        	String input = scanner.nextLine();
-       try {
+
+public class SHA1Digest {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter text to hash: ");
+        String input = scanner.nextLine();
+
+        try {
             // Create SHA-1 digest instance
             MessageDigest md = MessageDigest.getInstance("SHA-1");
 
@@ -110,21 +128,33 @@ public class SHA1Digest
             for (byte b : digest) {
                 hexString.append(String.format("%02x", b));
             }
+
             // Print the SHA-1 hash
             System.out.println("SHA-1 Digest: " + hexString.toString());
-        }
-       catch (NoSuchAlgorithmException e)
-       {
+        } catch (NoSuchAlgorithmException e) {
             System.out.println("SHA-1 Algorithm not found!");
         }
+
         scanner.close();
     }
 }
-</pre>
+        </pre>
 
         <div class="image-container">
             <img src="" alt="">
         </div>
     </div>
+
+    <script>
+        function copyCode(id) {
+            const codeBlock = document.getElementById(id);
+            const text = codeBlock.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Code copied to clipboard!");
+            }).catch(err => {
+                alert("Failed to copy code.");
+            });
+        }
+    </script>
 </body>
 </html>
