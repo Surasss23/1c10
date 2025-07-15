@@ -1,153 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Error</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-        .content {
-            max-width: 90%;
-            margin: auto;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
-        }
-        pre {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 16px;
-            color: #212529;
-            position: relative;
-        }
-        h1 {
-            text-align: center;
-            color: #007bff;
-        }
-        .image-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .copy-btn {
-            margin-bottom: 10px;
-            padding: 8px 16px;
-            background-color: #007bff;
-            border: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Message Buttons</title>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      text-align: center;
+      padding-top: 100px;
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      margin: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .whatsapp {
+      background-color: #25D366;
+    }
+
+    .telegram {
+      background-color: #0088cc;
+    }
+  </style>
 </head>
 <body>
-    <div class="content">
-        <h1>Not Found</h1>
 
-        <button class="copy-btn" onclick="copyCode('code1')">Copy 6th One</button>
-        <pre id="code1">
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
+  <button class="whatsapp" onclick="redirectToWhatsApp()">WhatsApp</button>
+  <button class="telegram" onclick="redirectToTelegram()">Telegram</button>
 
-public class SHA1Digest {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter text to hash: ");
-        String input = scanner.nextLine();
-
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            
-            byte[] messageBytes = input.getBytes();
-            byte[] digest = md.digest(messageBytes);
-
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : digest) {
-                hexString.append(String.format("%02x", b));
-            }
-
-            System.out.println("SHA-1 Digest: " + hexString.toString());
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("SHA-1 Algorithm not found!");
-        }
-
-        scanner.close();
+  <script>
+    function redirectToWhatsApp() {
+      const phoneNumber = "7989386499";
+      const message = encodeURIComponent("Suraj Mere Papa");
+      window.location.href = `https://wa.me/91${phoneNumber}?text=${message}`;
     }
-}
-        </pre>
 
-        <button class="copy-btn" onclick="copyCode('code2')">Copy 7th One</button>
-        <pre id="code2">
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
-
-public class MD5Digest {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter text to hash: ");
-        String input = scanner.nextLine();
-
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-
-            byte[] messageBytes = input.getBytes();
-            byte[] digest = md.digest(messageBytes);
-
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : digest) {
-                hexString.append(String.format("%02x", b));
-            }
-
-            System.out.println("MD5 Digest: " + hexString.toString());
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("MD5 Algorithm not found!");
-        }
-
-        scanner.close();
+    function redirectToTelegram() {
+      const username = "Suraj_2302";
+      const message = encodeURIComponent("Salar Movie");
+      window.location.href = `https://t.me/${username}`;
+      // Note: Telegram does not support pre-filled messages in all browsers
     }
-}
+  </script>
 
-        </pre>
-
-        <div class="image-container">
-            <img src="" alt="">
-        </div>
-    </div>
-
-    <script>
-        function copyCode(id) {
-            const codeBlock = document.getElementById(id);
-            const text = codeBlock.innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Code copied to clipboard!");
-            }).catch(err => {
-                alert("Failed to copy code.");
-            });
-        }
-    </script>
 </body>
 </html>
