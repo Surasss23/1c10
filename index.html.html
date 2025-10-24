@@ -1,54 +1,323 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Message Buttons</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>4 Textboxes — Paste Your Project Code</title>
   <style>
-    body {
-      background-color: #f0f0f0;
-      text-align: center;
-      padding-top: 100px;
-      font-family: Arial, sans-serif;
+    :root{
+      --bg:#f7fbff;
+      --card:#ffffff;
+      --accent:#2b9cff;
+      --muted:#666;
+      --radius:12px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
-
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      margin: 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      color: white;
+    body{
+      margin:0;
+      min-height:100vh;
+      background:linear-gradient(180deg,var(--bg),#eef6ff 60%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
     }
-
-    .whatsapp {
-      background-color: #25D366;
+    .wrap{
+      width:100%;
+      max-width:1100px;
+      background:var(--card);
+      box-shadow:0 10px 30px rgba(18,50,92,0.08);
+      border-radius:16px;
+      padding:22px;
     }
-
-    .telegram {
-      background-color: #0088cc;
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:16px;
+    }
+    h1{font-size:20px;margin:0}
+    p.hint{margin:0;color:var(--muted);font-size:13px}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+    .box{
+      background:#fbfdff;
+      border-radius:10px;
+      padding:10px;
+      border:1px solid rgba(20,60,120,0.04);
+      display:flex;
+      flex-direction:column;
+      min-height:240px;
+    }
+    label{
+      font-weight:600;
+      font-size:13px;
+      margin-bottom:8px;
+    }
+    textarea{
+      flex:1;
+      resize:vertical;
+      min-height:120px;
+      border:1px solid rgba(10,30,70,0.06);
+      padding:10px;
+      border-radius:8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:13px;
+      line-height:1.45;
+      background: #fff;
+    }
+    .controls{
+      display:flex;
+      gap:8px;
+      margin-top:8px;
+      align-items:center;
+    }
+    button{
+      background:var(--accent);
+      color:#fff;
+      border:0;
+      padding:8px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:13px;
+    }
+    button.ghost{
+      background:#f1f5fb;color:var(--accent);border:1px solid rgba(43,156,255,0.12);
+    }
+    .small{padding:6px 8px;font-size:12px}
+    .footer{
+      margin-top:14px;
+      display:flex;
+      gap:8px;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .note{color:var(--muted);font-size:13px}
+    @media (max-width:800px){
+      .grid{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
+  <div class="wrap" role="main">
+    <header>
+      <div>
+        <h1>Paste your project code — 4 boxes</h1>
+        <p class="hint">Use the boxes below. Each box has a label telling you what to put there.</p>
+      </div>
+      <div>
+        <button id="downloadAll">Download all as .txt</button>
+      </div>
+    </header>
 
-  <button class="whatsapp" onclick="redirectToWhatsApp()">WhatsApp</button>
-  <button class="telegram" onclick="redirectToTelegram()">Telegram</button>
+    <div class="grid">
+      <!-- BOX 1 -->
+      <div class="box">
+        <label for="box1">1) HTML / Main Markup</label>
+        #!/bin/bash
+read a
+read b
+echo "Enter two numbers: " # Taking user input
+echo "Enter your choice: " #input type of operation
+echo "1. Addition"
+echo "2. Substraction"
+echo "3. Multiplication"
+echo "4. Division"
+read ch
+#Acting on the user input
+case $ch in
+1) res=`echo $a + $b | bc`
+;;
+2) res=`echo $a - $b | bc`
+;;
+3) res=`echo $a \* $b | bc`
+;;
+4) res=`echo "scale=2; $a / $b" | bc`
+;;
+esac
+#Printing result
+echo "Result: $res"
+output1:
+Enter two numbers:
+5
+10
+1
+Enter your choice:
+Result: 15
+Output2:
+Enter two numbers:
+10
+3
+4
+Enter your choice:
+Result: 3.33
+Page 3
+Output:
+Enter two numbers:
+5
+10
+5
+Enter your choice:
+Invalid choice
+        <textarea id="box1" placeholder="Paste your HTML or template code here (e.g., index.html content)"></textarea>
+        <div class="controls">
+          <button class="small" onclick="copyText('box1')">Copy</button>
+          <button class="small ghost" onclick="clearBox('box1')">Clear</button>
+          <div style="margin-left:auto;color:var(--muted);font-size:12px">Box 1</div>
+        </div>
+      </div>
+
+      <!-- BOX 2 -->
+      <div class="box">
+        <label for="box2">2) CSS / Styles</label>
+        b) Demonstrate control structures
+Python program that demonstrates various control structures, including sequential
+execution, selection (if-else), and repetition (loops):
+# Sequential execution
+a = 10
+b = 20
+c = a + b
+print("Sequential Execution:")
+print(f"The sum of {a} and {b} is {c}")
+# Selection (if-else)
+print("\nSelection (if-else):")
+if a > b:
+print(f"{a} is greater than {b}")
+else:
+print(f"{a} is not greater than {b}")
+# Repetition (for loop)
+print("\nRepetition (for loop):")
+foriinrange(5):
+print(f"Iteration{i}")
+# Repetition (while loop)
+print("\nRepetition (while loop):")
+count = 0
+while count <5:
+print(f"Count is {count}")
+count += 1
+Output:
+Explanation:
+1. 2. 3. 4. Sequential Execution: The program executes statements one after another.
+Selection (if-else): The program makes a decision based on a condition.
+Repetition (for loop): The program repeats a block of code a specified number of
+times.
+Repetition (while loop): The program repeats a block of code while a condition is
+true.
+        <textarea id="box2" placeholder="Paste your CSS here (e.g., styles.css or <style> content)"></textarea>
+        <div class="controls">
+          <button class="small" onclick="copyText('box2')">Copy</button>
+          <button class="small ghost" onclick="clearBox('box2')">Clear</button>
+          <div style="margin-left:auto;color:var(--muted);font-size:12px">Box 2</div>
+        </div>
+      </div>
+
+      <!-- BOX 3 -->
+      <div class="box">
+        <label for="box3">3) JavaScript / Logic</label>
+        <!-- Paste your JS scripts here. Example: document.querySelector(...) -->
+        <textarea id="box3" placeholder="Paste your JavaScript here (e.g., scripts.js or inline <script> content)"></textarea>
+        <div class="controls">
+          <button class="small" onclick="copyText('box3')">Copy</button>
+          <button class="small ghost" onclick="clearBox('box3')">Clear</button>
+          <div style="margin-left:auto;color:var(--muted);font-size:12px">Box 3</div>
+        </div>
+      </div>
+
+      <!-- BOX 4 -->
+      <div class="box">
+        <label for="box4">4) Config / Data / Readme</label>
+        <!-- Paste config files, JSON, README notes, or any extra code/data here -->
+        <textarea id="box4" placeholder="Paste config, JSON, README, or extra code here (e.g., config.json)"></textarea>
+        <div class="controls">
+          <button class="small" onclick="copyText('box4')">Copy</button>
+          <button class="small ghost" onclick="clearBox('box4')">Clear</button>
+          <div style="margin-left:auto;color:var(--muted);font-size:12px">Box 4</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="note">
+        Tip: Use Box 1 for HTML, Box 2 for CSS, Box 3 for JS, Box 4 for configs or notes.
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="preview()">Open preview (combined)</button>
+        <button onclick="downloadCombined()" class="ghost">Download combined .html</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    function redirectToWhatsApp() {
-      const phoneNumber = "7989386499";
-      const message = encodeURIComponent("Suraj Mere Papa");
-      window.location.href = `https://wa.me/91${phoneNumber}?text=${message}`;
+    // Copy contents to clipboard
+    function copyText(id){
+      const el = document.getElementById(id);
+      navigator.clipboard.writeText(el.value)
+        .then(()=>{ alert('Copied content from ' + id); })
+        .catch(()=>{ alert('Unable to copy. Select and copy manually.'); });
     }
 
-    function redirectToTelegram() {
-      const username = "Suraj_2302";
-      const message = encodeURIComponent("Salar Movie");
-      window.location.href = `https://t.me/${username}`;
-      // Note: Telegram does not support pre-filled messages in all browsers
+    // Clear a box
+    function clearBox(id){
+      if(!confirm('Clear contents of ' + id + '?')) return;
+      document.getElementById(id).value = '';
+    }
+
+    // Download each box as a single .txt (simple)
+    document.getElementById('downloadAll').addEventListener('click', function(){
+      const content = [
+        "=== BOX 1: HTML ===\n", document.getElementById('box1').value, "\n\n",
+        "=== BOX 2: CSS ===\n", document.getElementById('box2').value, "\n\n",
+        "=== BOX 3: JS ===\n", document.getElementById('box3').value, "\n\n",
+        "=== BOX 4: CONFIG/README ===\n", document.getElementById('box4').value
+      ].join('');
+      downloadFile('project_all.txt', content);
+    });
+
+    // Create combined HTML file (Box1 placed in body, Box2 inside <style>, Box3 inside <script>)
+    function downloadCombined(){
+      const html = makeCombinedHTML();
+      downloadFile('project_combined.html', html);
+    }
+
+    // Preview combined HTML in a new tab/window
+    function preview(){
+      const html = makeCombinedHTML();
+      const w = window.open();
+      if(!w){ alert('Popup blocked. Allow popups to use preview.'); return; }
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+    }
+
+    function makeCombinedHTML(){
+      const box1 = document.getElementById('box1').value || '<!-- Paste your HTML here -->';
+      const box2 = document.getElementById('box2').value || '/* Paste CSS here */';
+      const box3 = document.getElementById('box3').value || '// Paste JS here';
+      // If user already included <html> tags in box1, we will not duplicate too much,
+      // but the simplest approach is to put box1 inside body — user can paste full HTML if needed.
+      return [
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>Combined Preview</title>\n<style>\n', box2, '\n</style>\n</head>\n<body>\n', box1, '\n\n<script>\n', box3, '\n</script>\n</body>\n</html>'
+      ].join('');
+    }
+
+    // helper to download a file
+    function downloadFile(filename, content){
+      const blob = new Blob([content], {type: 'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
     }
   </script>
-
 </body>
 </html>
