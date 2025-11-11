@@ -3,160 +3,330 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>LED Screen - Exam Message</title>
+  <title>Image Gallery — Suraj</title>
   <style>
     :root{
-      --bg:#050505;
-      --frame:#222;
-      --led-dot:#0a0a0a;
-      --led-lit: #ffd400; /* yellow text */
-      --speed: 22s; /* change to make movement faster/slower */
+      --bg: #e8f6ff; /* soft light-blue background */
+      --card: #ffffff;
+      --accent: #00aaff;
+      --text: #0b2340;
+      --shadow: 0 6px 18px rgba(11,35,64,0.08);
     }
-    html,body{
-      height:100%;
+    *{box-sizing:border-box}
+    body{
       margin:0;
-      font-family: "Courier New", Courier, monospace;
-      background: linear-gradient(#000000,#0a0a0a);
+      font-family: Inter, system-ui, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:24px;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .logo{
+      width:56px;
+      height:56px;
+      border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),#6ecbff);
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:20px;
-      box-sizing:border-box;
+      color:white;
+      font-weight:700;
+      box-shadow:var(--shadow);
     }
+    h1{font-size:20px;margin:0}
+    p.lead{margin:4px 0 18px;color:#23465a;opacity:0.9}
 
-    /* screen frame */
-    .led-screen{
-      width: min(960px, 95%);
-      height: 220px;
+    /* grid */
+    .gallery{
+      display:grid;
+      gap:14px;
+      grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    }
+    .card{
+      background:var(--card);
       border-radius:12px;
-      background: linear-gradient(180deg, #0b0b0b, #151515);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.7), inset 0 6px 18px rgba(255,255,255,0.02);
-      border: 8px solid var(--frame);
-      position: relative;
-      overflow: hidden;
-      display:flex;
-      align-items:center;
-      justify-content:flex-start;
-      padding: 18px;
-    }
-
-    /* subtle LED matrix dots as background */
-    .led-screen::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background-image:
-        radial-gradient(circle at 10px 10px, rgba(0,0,0,0.0) 2px, rgba(0,0,0,0.0) 3px, transparent 3px),
-        radial-gradient(circle, rgba(255,255,255,0.02) 0.5px, rgba(0,0,0,0) 1px);
-      background-size:18px 18px, 18px 18px;
-      mix-blend-mode: overlay;
-      opacity:0.35;
-      pointer-events:none;
-    }
-
-    /* inner mask to create scanline/LED glow */
-    .led-overlay{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(transparent 60%, rgba(255,255,255,0.02) 61%, transparent 62%),
-        linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
-      background-size: 100% 6px, 100% 100%;
-      pointer-events:none;
-      mix-blend-mode: overlay;
-      opacity:0.15;
-    }
-
-    /* message row */
-    .ticker-wrap{
+      overflow:hidden;
+      box-shadow:var(--shadow);
       position:relative;
+      transition:transform .22s ease, box-shadow .22s ease;
+    }
+    .card:hover{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(11,35,64,0.12); }
+
+    .thumb{
+      display:block;
+      width:100%;
+      height:0;
+      padding-bottom:66.666%; /* 3:2 ratio */
+      position:relative;
+      overflow:hidden;
+    }
+    .thumb img{
+      position:absolute;
+      inset:0;
       width:100%;
       height:100%;
+      object-fit:cover;
+      transition:transform .4s ease;
+    }
+    .card:hover img{ transform:scale(1.06); }
+
+    .meta{
+      padding:10px 12px;
       display:flex;
+      justify-content:space-between;
       align-items:center;
-      overflow:hidden;
-      z-index:2;
+      gap:8px;
     }
-
-    .ticker{
-      display:inline-block;
-      white-space:nowrap;
-      will-change: transform;
-      font-size: 48px;
-      letter-spacing: 2px;
-      font-weight:700;
-      text-transform: none;
-      color: var(--led-lit);
-      text-shadow:
-        0 0 6px rgba(255,212,0,0.9),
-        0 0 18px rgba(255,200,0,0.6),
-        0 0 36px rgba(255,180,0,0.25);
-      padding-left: 100%; /* start off-screen right */
-      animation: scroll var(--speed) linear infinite;
-      transform: translateX(0);
-    }
-
-    /* repeat the message so there's no gap — two copies */
-    .ticker + .ticker{
-      margin-left: 50px;
-    }
-
-    /* slow blinking effect (like LED) */
-    @keyframes blink {
-      0% { opacity:1; filter:brightness(1);}
-      50% { opacity:0.95; filter:brightness(1.05);}
-      100% { opacity:1; filter:brightness(1);}
-    }
-    .ticker { animation-name: scroll, blink; animation-duration: var(--speed), 1.2s; animation-iteration-count: infinite, infinite; animation-timing-function: linear, ease-in-out; }
-
-    @keyframes scroll {
-      0%   { transform: translateX(0%); }     /* using padding-left start */
-      100% { transform: translateX(-100%); }  /* move to left */
-    }
-
-    /* make text responsive */
-    @media (max-width:700px){
-      .led-screen{height:140px;}
-      .ticker{font-size:28px;}
-    }
-
-    /* small control box for editing quickly (not necessary) */
-    .control{
-      position:absolute;
-      right:10px;
-      bottom:8px;
-      font-size:12px;
-      color:#aaa;
-      z-index:3;
-      background: rgba(0,0,0,0.25);
+    .meta .title{ font-size:14px; font-weight:600; color:var(--text); }
+    .meta .linkbtn{
+      text-decoration:none;
+      background:var(--accent);
+      color:white;
       padding:6px 8px;
-      border-radius:6px;
-      backdrop-filter: blur(4px);
+      border-radius:8px;
+      font-size:13px;
     }
+
+    /* lightbox modal */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(4,12,20,0.6);
+      z-index:1000;
+      padding:24px;
+    }
+    .modal.open{ display:flex; }
+    .modal .frame{
+      max-width:95%;
+      max-height:95%;
+      background:#0b1320;
+      padding:12px;
+      border-radius:10px;
+      box-shadow:0 20px 50px rgba(2,6,12,0.6);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .modal img{
+      max-width:80vw;
+      max-height:80vh;
+      object-fit:contain;
+      display:block;
+    }
+    .close{
+      background:transparent;
+      border:0;
+      color:white;
+      font-size:18px;
+      margin-left:6px;
+      cursor:pointer;
+    }
+
+    /* small screens tweaks */
+    @media (max-width:420px){
+      header{gap:10px}
+      .logo{width:48px;height:48px}
+      .meta .title{font-size:13px}
+    }
+
+    /* footer */
+    footer{ margin-top:18px; color:#23465a; opacity:0.9; font-size:13px; text-align:center;}
   </style>
 </head>
 <body>
-  <div class="led-screen" role="img" aria-label="Exam message LED screen">
-    <div class="ticker-wrap" aria-hidden="false">
-      <!-- Two copies so the scroll looks continuous -->
-      <div class="ticker">Exam Ka Padh Le Vaishali Bkl &nbsp; • &nbsp;</div>
-      <div class="ticker">Exam Ka Padh Le Vaishali Bkl &nbsp; • &nbsp;</div>
-    </div>
+  <div class="container">
+    <header>
+      <div class="logo">EL</div>
+      <div>
+        <h1>Eternal Lensss — Image Gallery</h1>
+        <p class="lead">10 image tags ready — replace <code>src</code> and <code>href</code> with your own files/links. Mobile-friendly & simple lightbox included.</p>
+      </div>
+    </header>
 
-    <div class="led-overlay" aria-hidden="true"></div>
+    <main>
+      <section class="gallery" id="gallery">
+        <!-- Card 1 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image1-large.jpg" onclick="openModal(event)">
+            <img src="images/image1.jpg" alt="Image 1 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 1</div>
+            <!-- change href to the page you want the image to link to -->
+            <a class="linkbtn" href="https://example.com/page1" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
 
-    <div class="control">
-      Text color: yellow • Speed: <strong>slow</strong>
+        <!-- Card 2 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image2-large.jpg" onclick="openModal(event)">
+            <img src="images/image2.jpg" alt="Image 2 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 2</div>
+            <a class="linkbtn" href="https://example.com/page2" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image3-large.jpg" onclick="openModal(event)">
+            <img src="images/image3.jpg" alt="Image 3 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 3</div>
+            <a class="linkbtn" href="https://example.com/page3" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image4-large.jpg" onclick="openModal(event)">
+            <img src="images/image4.jpg" alt="Image 4 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 4</div>
+            <a class="linkbtn" href="https://example.com/page4" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image5-large.jpg" onclick="openModal(event)">
+            <img src="images/image5.jpg" alt="Image 5 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 5</div>
+            <a class="linkbtn" href="https://example.com/page5" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image6-large.jpg" onclick="openModal(event)">
+            <img src="images/image6.jpg" alt="Image 6 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 6</div>
+            <a class="linkbtn" href="https://example.com/page6" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
+
+        <!-- Card 7 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image7-large.jpg" onclick="openModal(event)">
+            <img src="images/image7.jpg" alt="Image 7 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 7</div>
+            <a class="linkbtn" href="https://example.com/page7" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
+
+        <!-- Card 8 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image8-large.jpg" onclick="openModal(event)">
+            <img src="images/image8.jpg" alt="Image 8 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 8</div>
+            <a class="linkbtn" href="https://example.com/page8" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
+
+        <!-- Card 9 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image9-large.jpg" onclick="openModal(event)">
+            <img src="images/image9.jpg" alt="Image 9 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 9</div>
+            <a class="linkbtn" href="https://example.com/page9" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
+
+        <!-- Card 10 -->
+        <article class="card">
+          <a class="thumb" href="#" data-full="images/image10-large.jpg" onclick="openModal(event)">
+            <img src="images/image10.jpg" alt="Image 10 description" loading="lazy">
+          </a>
+          <div class="meta">
+            <div class="title">Picture 10</div>
+            <a class="linkbtn" href="https://example.com/page10" target="_blank" rel="noopener">Open Link</a>
+          </div>
+        </article>
+
+      </section>
+    </main>
+
+    <footer>
+      Tip: Replace <code>images/imageX.jpg</code> with your real image paths or absolute URLs. Use larger versions for <code>data-full</code> so lightbox shows high-res image.
+    </footer>
+  </div>
+
+  <!-- Modal Lightbox -->
+  <div id="modal" class="modal" onclick="closeModal(event)">
+    <div class="frame" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+      <img id="modalImg" src="" alt="Expanded image">
+      <div style="display:flex;flex-direction:column;justify-content:center;margin-left:8px;">
+        <button class="close" onclick="closeModal(event)" aria-label="Close">✕</button>
+        <a id="modalLink" class="linkbtn" href="#" target="_blank" rel="noopener" style="margin-top:8px;text-align:center;">Open Link</a>
+      </div>
     </div>
   </div>
 
-  <!-- Optional: small script to easily change text or speed -->
   <script>
-    // If you want to change text or speed dynamically, you can uncomment and edit:
-    // const msg = "Exam Ka Padh Le Vaishali Bkl";
-    // document.querySelectorAll('.ticker').forEach(el => el.textContent = msg + "  •  ");
-    // document.documentElement.style.setProperty('--speed','30s'); // slower
-    // document.documentElement.style.setProperty('--speed','12s'); // faster
+    // open the modal with the full image and the corresponding link
+    function openModal(e){
+      e.preventDefault();
+      const thumb = e.currentTarget;
+      const full = thumb.getAttribute('data-full') || thumb.querySelector('img')?.src;
+      const card = thumb.closest('.card');
+      const link = card?.querySelector('.linkbtn')?.href || '#';
+
+      const modal = document.getElementById('modal');
+      const modalImg = document.getElementById('modalImg');
+      const modalLink = document.getElementById('modalLink');
+
+      modalImg.src = full;
+      modalImg.alt = card?.querySelector('img')?.alt || 'Image';
+      modalLink.href = link;
+
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(e){
+      if(e) e.preventDefault();
+      const modal = document.getElementById('modal');
+      modal.classList.remove('open');
+      document.getElementById('modalImg').src = '';
+      document.body.style.overflow = '';
+    }
+
+    // keyboard support: ESC to close
+    document.addEventListener('keydown', function(ev){
+      if(ev.key === 'Escape'){
+        const modal = document.getElementById('modal');
+        if(modal.classList.contains('open')) closeModal(ev);
+      }
+    });
   </script>
 </body>
 </html>
