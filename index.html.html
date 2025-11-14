@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Copy Boxes – Suraj Tools</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #eef6ff;
+        padding: 20px;
+        color: #002b4d;
+    }
+    h2 {
+        text-align: center;
+        color: #004f7a;
+    }
+    .box {
+        background: #ffffff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    textarea {
+        width: 100%;
+        height: 300px;
+        border-radius: 8px;
+        border: 1px solid #bcd7ea;
+        padding: 10px;
+        font-size: 14px;
+        background: #f7fbff;
+        color: #003753;
+    }
+    button {
+        margin-top: 10px;
+        padding: 10px 18px;
+        background: #0077b6;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #005f8a;
+    }
+</style>
+
+<script>
+function copyText(id) {
+    var text = document.getElementById(id);
+    text.select();
+    text.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(text.value);
+    alert("Copied!");
+}
+</script>
+</head>
+<body>
+
+<h2>Copy Your Code Easily</h2>
+
+<div class="box">
+    <h3>📌 Box 1: ASP.NET WebForm Code</h3>
+    <textarea id="code1">
+<%@ Page Language="C#" AutoEventWireup="true"
+CodeBehind="WebForm1.aspx.cs"
+Inherits="WebApplication3.WebForm1" %>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>Course Information Form</title>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<h2>Enter Course Details</h2>
+<asp:Label ID="L1" runat="server" Text="Roll No: "></asp:Label>
+<asp:TextBox ID="t1" runat="server"></asp:TextBox>
+<br /><br />
+
+<asp:Label ID="L2" runat="server" Text="Name: "></asp:Label>
+<asp:TextBox ID="t2" runat="server"></asp:TextBox>
+<br /><br />
+
+<asp:Label ID="L5" runat="server" Text="Course: "></asp:Label>
+<asp:DropDownList ID="c1" runat="server"></asp:DropDownList>
+<br /><br />
+
+<asp:Button ID="b1" runat="server" Text="Submit" OnClick="btnSubmit_Click" />
+<br />
+<asp:Label ID="L6" runat="server" Text=""></asp:Label>
+</div>
+</form>
+</body>
+</html>
+
+WebForm1.aspx.cs program:
+using System;
+using System.Web.UI.WebControls;
+namespace WebApplication3
+{
+public partial class WebForm1 : System.Web.UI.Page
+{
+protected void Page_Load(object sender, EventArgs e)
+{
+if (!IsPostBack)
+{
+string[] courses = { "B.Sc", "B.Com", "B.C.A", "B.B.A" };
+c1.Items.Add(new ListItem("Select course",""){ Enabled = true });
+
+for (int i = 0; i < courses.Length; i++)
+{
+string courseCode = courses[i].ToLower().Replace(".","");
+c1.Items.Add(new ListItem(courseCode, courses[i]));
+}
+}
+}
+
+protected void btnSubmit_Click(object sender, EventArgs e)
+{
+string rollNo = t1.Text;
+string name = t2.Text;
+string course = c1.SelectedValue;
+L6.Text = $"Roll No: {rollNo}, Name: {name}, Course: {course}";
+}
+}
+}
+    </textarea>
+    <button onclick="copyText('code1')">Copy Box 1</button>
+</div>
+
+<div class="box">
+    <h3>📌 Box 2: Visual Studio Installation Steps</h3>
+    <textarea id="code2">
+Step 1:
+Click on the following URL [Visual Studio Community 2013] and you will see the download screen.
+
+Step 2:
+Click on the Download button. The installer file will start downloading.
+
+Step 3:
+After the installer downloads, open the file and run the setup.
+Check the “I agree” checkbox and click Next.
+
+Step 4:
+Choose which features you want to install.
+Recommended: install all features.
+Then click Install.
+
+Step 5:
+The setup will download required components and install them. This will take some time.
+
+Step 6:
+Once installation is finished, click “Launch” to open Visual Studio Community 2013.
+
+Step 7:
+The Welcome screen will ask you to sign in with your Microsoft Account.
+
+Step 8:
+Choose your environment settings and color theme.
+
+Step 9:
+Your Visual Studio Community 2013 is now ready to use.
+    </textarea>
+    <button onclick="copyText('code2')">Copy Box 2</button>
+</div>
+
+</body>
+</html>
