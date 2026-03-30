@@ -1,1 +1,147 @@
-https://www.canva.com/design/DAHFC_koH8k/O5Z2g3PShpWLc5fSwr7w5A/edit?utm_content=DAHFC_koH8k&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Code Viewer</title>
+
+    <!-- Prism CSS (for code highlighting) -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet"/>
+
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .box {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            background: #38bdf8;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Java Code Editor View</h1>
+
+<!-- Program 1 -->
+<div class="box">
+<button onclick="copyCode('code1')">Copy</button>
+<pre><code id="code1" class="language-java">
+import java.sql.*;
+
+public class Create_Table {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/testdb";
+        String user = "root";
+        String password = "root";
+
+        Connection conn = null;
+        Statement stmt = null;
+
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+            stmt = conn.createStatement();
+
+            String createTable = "CREATE TABLE course("
+                    + "id INT PRIMARY KEY AUTO_INCREMENT,"
+                    + "name VARCHAR(50),"
+                    + "dept VARCHAR(25))";
+
+            stmt.executeUpdate(createTable);
+            System.out.println("table created");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</code></pre>
+</div>
+
+<!-- Program 2 -->
+<div class="box">
+<button onclick="copyCode('code2')">Copy</button>
+<pre><code id="code2" class="language-java">
+import java.sql.*;
+import java.util.*;
+
+public class Delete_Table {
+
+    private static final String URL = "jdbc:mysql://localhost:3306/testdb";
+    private static final String USER = "root";
+    private static final String PASSWORD = "root";
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter the id to delete the record:");
+        int uid = sc.nextInt();
+
+        try {
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            Statement stmt = conn.createStatement();
+
+            int rows = stmt.executeUpdate("DELETE FROM emp WHERE id=" + uid);
+
+            if (rows > 0) {
+                System.out.println("record deleted");
+            } else {
+                System.out.println("no record found");
+            }
+
+            conn.close();
+            stmt.close();
+            sc.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+</div>
+
+<!-- Prism JS -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+
+<script>
+function copyCode(id) {
+    let text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text);
+    alert("Copied!");
+}
+</script>
+
+</body>
+</html>
