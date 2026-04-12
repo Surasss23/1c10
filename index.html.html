@@ -1,1 +1,171 @@
-https://canva.link/yaje86ea6iwzkgm
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Wallet Game</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+}
+
+.box {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+input, button {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 8px;
+    border: none;
+    width: 80%;
+}
+
+button {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.win { background: green; color: white; }
+.loss { background: red; color: white; }
+.big { background: orange; }
+.small { background: blue; }
+
+.history {
+    max-height: 150px;
+    overflow-y: auto;
+    text-align: left;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>💰 Demo Wallet</h2>
+
+<div class="box">
+    <h3>Wallet Balance: ₹<span id="wallet">0</span></h3>
+
+    <input type="number" id="recharge" placeholder="Enter recharge amount">
+    <button onclick="addMoney()">Add Money</button>
+</div>
+
+<div class="box">
+    <input type="number" id="betAmount" placeholder="Enter Amount">
+
+    <br>
+
+    <button class="win" onclick="win()">WIN</button>
+    <button class="loss" onclick="loss()">LOSS</button>
+</div>
+
+<div class="box">
+    <button class="big" onclick="selectType('Big')">BIG</button>
+    <button class="small" onclick="selectType('Small')">SMALL</button>
+
+    <p>Selected: <span id="type">None</span></p>
+</div>
+
+<div class="box">
+    <h3>📊 Stats</h3>
+    <p>Win %: <span id="winPercent">0</span>%</p>
+    <p>Loss %: <span id="lossPercent">0</span>%</p>
+</div>
+
+<div class="box">
+    <h3>📜 History</h3>
+    <div class="history" id="history"></div>
+</div>
+
+</div>
+
+<script>
+
+let wallet = 0;
+let winCount = 0;
+let lossCount = 0;
+let total = 0;
+
+function addMoney() {
+    let amount = Number(document.getElementById("recharge").value);
+    wallet += amount;
+    updateWallet();
+}
+
+function win() {
+    let bet = Number(document.getElementById("betAmount").value);
+
+    if (bet > wallet) {
+        alert("Not enough balance");
+        return;
+    }
+
+    wallet += bet;
+    winCount++;
+    total++;
+
+    addHistory("WIN +" + bet);
+    updateWallet();
+    updateStats();
+}
+
+function loss() {
+    let bet = Number(document.getElementById("betAmount").value);
+
+    if (bet > wallet) {
+        alert("Not enough balance");
+        return;
+    }
+
+    wallet -= bet;
+    lossCount++;
+    total++;
+
+    addHistory("LOSS -" + bet);
+    updateWallet();
+    updateStats();
+}
+
+function selectType(type) {
+    document.getElementById("type").innerText = type;
+}
+
+function updateWallet() {
+    document.getElementById("wallet").innerText = wallet;
+}
+
+function updateStats() {
+    let winP = (winCount / total) * 100 || 0;
+    let lossP = (lossCount / total) * 100 || 0;
+
+    document.getElementById("winPercent").innerText = winP.toFixed(1);
+    document.getElementById("lossPercent").innerText = lossP.toFixed(1);
+}
+
+function addHistory(text) {
+    let history = document.getElementById("history");
+    let p = document.createElement("p");
+    p.innerText = text;
+    history.prepend(p);
+}
+
+</script>
+
+</body>
+</html>
