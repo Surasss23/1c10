@@ -1,935 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pattern Oracle — Prediction Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #1a1a24;
-    --border: #2a2a3a;
-    --accent: #00ff88;
-    --accent2: #ff4466;
-    --accent3: #4488ff;
-    --text: #e8e8f0;
-    --muted: #666680;
-    --red-c: #ff4466;
-    --green-c: #00ff88;
-    --violet-c: #aa44ff;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindFlip - Contrarian Prediction Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #eee;
+            padding: 20px;
+        }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Space Mono', monospace;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-  /* BG grid */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
+        h1 {
+            text-align: center;
+            color: #e94560;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
 
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 24px 16px;
-    position: relative;
-    z-index: 1;
-  }
+        .subtitle {
+            text-align: center;
+            color: #a0a0a0;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
 
-  /* HEADER */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 32px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border);
-  }
+        .phase-indicator {
+            background: rgba(233, 69, 96, 0.2);
+            border: 2px solid #e94560;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
 
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-  }
+        .input-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
 
-  .logo span { color: var(--accent); }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
 
-  .stats-bar {
-    display: flex;
-    gap: 20px;
-    font-size: 11px;
-    color: var(--muted);
-  }
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
 
-  .stats-bar b { color: var(--accent); font-size: 14px; }
+        .btn-red {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+        }
 
-  /* INPUT SECTION */
-  .input-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-  }
+        .btn-red:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.5);
+        }
 
-  .section-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
+        .btn-green {
+            background: linear-gradient(145deg, #27ae60, #229954);
+            color: white;
+        }
 
-  .input-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr auto;
-    gap: 12px;
-    align-items: end;
-  }
+        .btn-green:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.5);
+        }
 
-  .field label {
-    display: block;
-    font-size: 10px;
-    letter-spacing: 1px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-  }
+        .history-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+            min-height: 50px;
+        }
 
-  select, input[type="number"] {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'Space Mono', monospace;
-    font-size: 14px;
-    padding: 10px 12px;
-    outline: none;
-    transition: border-color 0.2s;
-    appearance: none;
-  }
+        .outcome-dot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
 
-  select:focus, input:focus {
-    border-color: var(--accent);
-  }
+        .dot-red { background: linear-gradient(145deg, #e74c3c, #c0392b); }
+        .dot-green { background: linear-gradient(145deg, #27ae60, #229954); }
 
-  .btn-add {
-    background: var(--accent);
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    padding: 10px 20px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: opacity 0.2s, transform 0.1s;
-    letter-spacing: 0.5px;
-  }
+        .prediction-panel {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid #e94560;
+            display: none;
+        }
 
-  .btn-add:hover { opacity: 0.85; transform: translateY(-1px); }
-  .btn-add:active { transform: translateY(0); }
+        .prediction-panel.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
 
-  /* PREDICTION BOX */
-  .prediction-section {
-    background: var(--surface);
-    border: 1px solid var(--accent);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-    position: relative;
-    overflow: hidden;
-  }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  .prediction-section::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent3), var(--accent2));
-  }
+        .prediction-title {
+            color: #e94560;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
 
-  .pred-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-top: 16px;
-  }
+        .mind-reading {
+            background: rgba(233, 69, 96, 0.1);
+            border-left: 4px solid #e94560;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
 
-  .pred-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
-  }
+        .contrarian-signal {
+            background: rgba(39, 174, 96, 0.1);
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
 
-  .pred-card .label {
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
 
-  .pred-value {
-    font-family: 'Syne', sans-serif;
-    font-size: 32px;
-    font-weight: 800;
-    color: var(--accent);
-  }
+        .stat-box {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
 
-  .pred-value.red { color: var(--red-c); }
-  .pred-value.green { color: var(--green-c); }
-  .pred-value.violet { color: var(--violet-c); }
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #e94560;
+        }
 
-  .pred-sub {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
 
-  .confidence-bar {
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin-top: 10px;
-    overflow: hidden;
-  }
+        .reset-btn {
+            background: #34495e;
+            color: white;
+            padding: 12px 30px;
+            margin-top: 20px;
+        }
 
-  .confidence-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.6s ease;
-  }
+        .reset-btn:hover {
+            background: #2c3e50;
+        }
 
-  /* ALGO INSIGHTS */
-  .insights-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
+        .pattern-alert {
+            background: rgba(241, 196, 15, 0.2);
+            border: 1px solid #f1c40f;
+            color: #f1c40f;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            display: none;
+        }
 
-  .insight-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-  }
+        .walter-quote {
+            font-style: italic;
+            color: #888;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
 
-  .insight-card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 14px;
-  }
+        .confidence-meter {
+            height: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
 
-  /* NUMBER FREQUENCY */
-  .freq-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 7px;
-  }
-
-  .freq-num {
-    font-size: 12px;
-    width: 20px;
-    text-align: right;
-    color: var(--muted);
-  }
-
-  .freq-bar-wrap {
-    flex: 1;
-    height: 18px;
-    background: var(--surface2);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .freq-bar {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.5s ease;
-    display: flex;
-    align-items: center;
-    padding-left: 6px;
-    font-size: 9px;
-    color: #000;
-    font-weight: 700;
-  }
-
-  .freq-count {
-    font-size: 11px;
-    color: var(--muted);
-    width: 24px;
-    text-align: right;
-  }
-
-  /* RECENT RESULTS */
-  .results-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-  }
-
-  .results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  .btn-clear {
-    background: transparent;
-    border: 1px solid var(--accent2);
-    color: var(--accent2);
-    border-radius: 6px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    padding: 5px 10px;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: all 0.2s;
-  }
-
-  .btn-clear:hover { background: var(--accent2); color: #000; }
-
-  .results-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    max-height: 260px;
-    overflow-y: auto;
-  }
-
-  .result-chip {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 5px 9px;
-    font-size: 11px;
-    animation: chipIn 0.2s ease;
-  }
-
-  @keyframes chipIn {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  .chip-num {
-    font-weight: 700;
-    font-size: 13px;
-  }
-
-  .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-  }
-
-  .dot.red { background: var(--red-c); }
-  .dot.green { background: var(--green-c); }
-  .dot.violet { background: var(--violet-c); }
-
-  .chip-sz {
-    color: var(--muted);
-    font-size: 9px;
-  }
-
-  /* STREAK & PATTERNS */
-  .streak-info {
-    font-size: 12px;
-    line-height: 1.8;
-  }
-
-  .streak-info .tag {
-    display: inline-block;
-    background: var(--surface2);
-    border-radius: 4px;
-    padding: 1px 6px;
-    margin: 2px;
-    font-size: 11px;
-  }
-
-  .tag.hot { border-left: 2px solid var(--accent2); color: var(--accent2); }
-  .tag.cold { border-left: 2px solid var(--accent3); color: var(--accent3); }
-  .tag.normal { border-left: 2px solid var(--muted); color: var(--muted); }
-
-  /* EMPTY STATE */
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 2;
-  }
-
-  .empty-state .big { font-size: 40px; margin-bottom: 8px; }
-
-  /* PROGRESS */
-  .progress-wrap {
-    margin-bottom: 24px;
-  }
-
-  .progress-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
-  .progress-track {
-    height: 6px;
-    background: var(--surface2);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent3), var(--accent));
-    border-radius: 3px;
-    transition: width 0.4s ease;
-  }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--accent);
-    color: #000;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    padding: 12px 20px;
-    border-radius: 8px;
-    z-index: 100;
-    transform: translateY(80px);
-    opacity: 0;
-    transition: all 0.3s ease;
-  }
-
-  .toast.show { transform: translateY(0); opacity: 1; }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--surface2); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  /* MOBILE */
-  @media (max-width: 600px) {
-    .input-row { grid-template-columns: 1fr 1fr; }
-    .btn-add { grid-column: span 2; }
-    .pred-grid { grid-template-columns: 1fr; }
-    .insights-grid { grid-template-columns: 1fr; }
-    .stats-bar { display: none; }
-  }
-
-  .algo-note {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 12px;
-    line-height: 1.7;
-    border-top: 1px solid var(--border);
-    padding-top: 12px;
-  }
-
-  .trend-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--surface2);
-    border-radius: 4px;
-    padding: 3px 8px;
-    font-size: 11px;
-    margin: 3px;
-  }
-</style>
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #f39c12);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>🧠 MindFlip</h1>
+        <p class="subtitle">"Play the player, not the game" - Billy Walters Method</p>
 
-<div class="container">
-
-  <!-- HEADER -->
-  <div class="header">
-    <div class="logo">Pattern <span>Oracle</span></div>
-    <div class="stats-bar">
-      <div>TOTAL <b id="hTotalCount">0</b></div>
-      <div>SESSION <b id="hSessionCount">0</b></div>
-      <div>ACCURACY <b id="hAccuracy">—</b></div>
-    </div>
-  </div>
-
-  <!-- PROGRESS BAR -->
-  <div class="progress-wrap">
-    <div class="progress-info">
-      <span>DAILY PROGRESS</span>
-      <span id="progressText">0 / 100 results</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill" style="width:0%"></div>
-    </div>
-  </div>
-
-  <!-- INPUT -->
-  <div class="input-section">
-    <div class="section-label">⬤ Add Result</div>
-    <div class="input-row">
-      <div class="field">
-        <label>Number (0-9)</label>
-        <input type="number" id="inpNumber" min="0" max="9" placeholder="0-9">
-      </div>
-      <div class="field">
-        <label>Size</label>
-        <select id="inpSize">
-          <option value="">-- Size --</option>
-          <option value="Small">Small (0-4)</option>
-          <option value="Big">Big (5-9)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Color</label>
-        <select id="inpColor">
-          <option value="">-- Color --</option>
-          <option value="Red">Red</option>
-          <option value="Green">Green</option>
-          <option value="Violet">Violet</option>
-        </select>
-      </div>
-      <button class="btn-add" onclick="addResult()">+ ADD</button>
-    </div>
-  </div>
-
-  <!-- PREDICTION -->
-  <div class="prediction-section" id="predSection">
-    <div class="section-label">🔮 Next Prediction</div>
-    <div id="predContent">
-      <div class="empty-state">
-        <div class="big">🎯</div>
-        Enter at least <b>10 results</b> to activate prediction engine
-      </div>
-    </div>
-  </div>
-
-  <!-- INSIGHTS GRID -->
-  <div class="insights-grid">
-
-    <!-- FREQUENCY -->
-    <div class="insight-card">
-      <h3>📊 Number Frequency</h3>
-      <div id="freqChart">
-        <div class="empty-state" style="padding:20px">No data yet</div>
-      </div>
-    </div>
-
-    <!-- STREAKS & PATTERNS -->
-    <div class="insight-card">
-      <h3>🔥 Hot / Cold & Patterns</h3>
-      <div id="patternBox">
-        <div class="empty-state" style="padding:20px">No data yet</div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- RESULTS LIST -->
-  <div class="results-section">
-    <div class="results-header">
-      <div class="section-label" style="margin:0">📋 Results History (<span id="totalCount">0</span>)</div>
-      <button class="btn-clear" onclick="clearAll()">✕ CLEAR ALL</button>
-    </div>
-    <div class="results-list" id="resultsList">
-      <div class="empty-state" style="width:100%;padding:20px">No results yet. Start adding!</div>
-    </div>
-  </div>
-
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-// ═══════════════════════════════════════════
-// STORAGE
-// ═══════════════════════════════════════════
-const STORE_KEY = 'pattern_oracle_v1';
-
-function loadData() {
-  try {
-    const d = localStorage.getItem(STORE_KEY);
-    return d ? JSON.parse(d) : { results: [], sessionCount: 0, predHistory: [] };
-  } catch(e) { return { results: [], sessionCount: 0, predHistory: [] }; }
-}
-
-function saveData(data) {
-  localStorage.setItem(STORE_KEY, JSON.stringify(data));
-}
-
-let state = loadData();
-let sessionAdded = 0;
-
-// ═══════════════════════════════════════════
-// ADD RESULT
-// ═══════════════════════════════════════════
-function addResult() {
-  const num = parseInt(document.getElementById('inpNumber').value);
-  const size = document.getElementById('inpSize').value;
-  const color = document.getElementById('inpColor').value;
-
-  if (isNaN(num) || num < 0 || num > 9) return showToast('Enter number 0-9');
-  if (!size) return showToast('Select size');
-  if (!color) return showToast('Select color');
-
-  const entry = { n: num, s: size, c: color, t: Date.now() };
-  state.results.push(entry);
-  sessionAdded++;
-  saveData(state);
-
-  // reset inputs
-  document.getElementById('inpNumber').value = '';
-  document.getElementById('inpSize').value = '';
-  document.getElementById('inpColor').value = '';
-  document.getElementById('inpNumber').focus();
-
-  showToast(`✓ Added: ${num} | ${size} | ${color}`);
-  render();
-}
-
-// ═══════════════════════════════════════════
-// ALGORITHM ENGINE
-// ═══════════════════════════════════════════
-
-function analyze(results) {
-  if (results.length < 3) return null;
-
-  const nums = results.map(r => r.n);
-  const sizes = results.map(r => r.s);
-  const colors = results.map(r => r.c);
-  const n = results.length;
-
-  // 1. FREQUENCY ANALYSIS
-  const numFreq = Array(10).fill(0);
-  nums.forEach(n => numFreq[n]++);
-
-  // 2. COLOR / SIZE DISTRIBUTION
-  const colorFreq = { Red: 0, Green: 0, Violet: 0 };
-  const sizeFreq = { Small: 0, Big: 0 };
-  results.forEach(r => { colorFreq[r.c]++; sizeFreq[r.s]++; });
-
-  // 3. RECENT WINDOW WEIGHT (last 20 = 3x weight, last 10 = 5x weight)
-  const weightedNumFreq = Array(10).fill(0);
-  results.forEach((r, i) => {
-    let w = 1;
-    if (i >= n - 10) w = 5;
-    else if (i >= n - 20) w = 3;
-    else if (i >= n - 40) w = 2;
-    weightedNumFreq[r.n] += w;
-  });
-
-  // 4. DUE NUMBER ANALYSIS (numbers that haven't appeared recently)
-  const lastSeen = {};
-  for (let i = 0; i < 10; i++) lastSeen[i] = -1;
-  nums.forEach((v, i) => lastSeen[v] = i);
-  const overdueness = Array(10).fill(0).map((_, i) => {
-    return lastSeen[i] === -1 ? n : n - 1 - lastSeen[i];
-  });
-
-  // 5. PATTERN SEQUENCE (last 3-4 numbers cycle prediction)
-  const last4 = nums.slice(-4);
-  const last2 = nums.slice(-2);
-
-  // Find if this last4 pattern appeared before
-  let patternMatch = null;
-  if (n >= 8) {
-    for (let i = 0; i < n - 5; i++) {
-      if (nums[i] === last4[0] && nums[i+1] === last4[1] &&
-          nums[i+2] === last4[2] && nums[i+3] === last4[3]) {
-        patternMatch = nums[i + 4]; // what came after this pattern
-        break;
-      }
-    }
-  }
-
-  // 6. COMBINED SCORE
-  const score = Array(10).fill(0);
-  for (let i = 0; i < 10; i++) {
-    // weighted recent frequency
-    score[i] += weightedNumFreq[i] * 0.4;
-    // overdue bonus (numbers not seen in a while are "due")
-    score[i] += Math.min(overdueness[i] * 0.5, 8);
-    // pattern match bonus
-    if (patternMatch === i) score[i] += 15;
-  }
-
-  // Best number prediction
-  const sortedByScore = [...Array(10).keys()].sort((a, b) => score[b] - score[a]);
-  const predNum = sortedByScore[0];
-  const predNum2 = sortedByScore[1];
-
-  // Confidence based on how dominant the top score is
-  const totalScore = score.reduce((a, b) => a + b, 0);
-  const confidence = totalScore > 0 ? Math.min(Math.round((score[predNum] / totalScore) * 100 * 2.5), 92) : 50;
-
-  // SIZE prediction (based on weighted recent trend)
-  const recentSizes = sizes.slice(-20);
-  const rsBig = recentSizes.filter(s => s === 'Big').length;
-  const rsSmall = recentSizes.length - rsBig;
-  let predSize, sizeConf;
-  if (rsBig > rsSmall * 1.3) {
-    predSize = 'Big'; sizeConf = Math.round((rsBig / recentSizes.length) * 100);
-  } else if (rsSmall > rsBig * 1.3) {
-    predSize = 'Small'; sizeConf = Math.round((rsSmall / recentSizes.length) * 100);
-  } else {
-    // alternation tendency
-    const lastSize = sizes[sizes.length - 1];
-    predSize = lastSize === 'Big' ? 'Small' : 'Big';
-    sizeConf = 55;
-  }
-
-  // COLOR prediction
-  const recentColors = colors.slice(-20);
-  const colorCounts = { Red: 0, Green: 0, Violet: 0 };
-  recentColors.forEach(c => colorCounts[c]++);
-
-  // Find least recent color (due)
-  const colorLastSeen = { Red: -1, Green: -1, Violet: -1 };
-  colors.forEach((v, i) => colorLastSeen[v] = i);
-  const colorDue = Object.entries(colorLastSeen).sort((a, b) => a[1] - b[1]);
-  
-  // Weight: overdue + recent low frequency
-  const colorScore = {};
-  ['Red', 'Green', 'Violet'].forEach(c => {
-    colorScore[c] = (n - 1 - colorLastSeen[c]) * 0.6 +
-      (recentColors.length - colorCounts[c]) * 0.4;
-  });
-  const predColor = Object.entries(colorScore).sort((a, b) => b[1] - a[1])[0][0];
-  const colorScoreTotal = Object.values(colorScore).reduce((a,b) => a+b, 0);
-  const colorConf = colorScoreTotal > 0 ?
-    Math.min(Math.round((colorScore[predColor] / colorScoreTotal) * 100 * 2), 88) : 55;
-
-  // HOT / COLD
-  const hot = sortedByScore.slice(0, 3);
-  const cold = [...Array(10).keys()].sort((a, b) => overdueness[b] - overdueness[a]).slice(0, 3);
-
-  // STREAK
-  let currentStreak = 1;
-  for (let i = n - 2; i >= 0; i--) {
-    if (results[i].c === results[n-1].c) currentStreak++;
-    else break;
-  }
-
-  return {
-    predNum, predNum2, confidence,
-    predSize, sizeConf,
-    predColor, colorConf,
-    numFreq, weightedNumFreq,
-    colorFreq, sizeFreq,
-    hot, cold,
-    currentStreak,
-    lastColor: colors[n-1],
-    patternMatch,
-    n
-  };
-}
-
-// ═══════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════
-
-function render() {
-  const results = state.results;
-  const n = results.length;
-
-  // Progress
-  const todayResults = results.filter(r => {
-    const d = new Date(r.t);
-    const today = new Date();
-    return d.toDateString() === today.toDateString();
-  }).length;
-  const prog = Math.min((todayResults / 100) * 100, 100);
-  document.getElementById('progressFill').style.width = prog + '%';
-  document.getElementById('progressText').textContent = `${todayResults} / 100 results today`;
-
-  // Header stats
-  document.getElementById('hTotalCount').textContent = n;
-  document.getElementById('hSessionCount').textContent = sessionAdded;
-  document.getElementById('totalCount').textContent = n;
-
-  // Results list (newest first, show last 100)
-  const list = document.getElementById('resultsList');
-  if (n === 0) {
-    list.innerHTML = '<div class="empty-state" style="width:100%;padding:20px">No results yet. Start adding!</div>';
-  } else {
-    const recent = [...results].reverse().slice(0, 200);
-    list.innerHTML = recent.map((r, i) => {
-      const colorClass = r.c.toLowerCase();
-      return `<div class="result-chip">
-        <span class="chip-num" style="color:var(--${colorClass === 'red' ? 'red-c' : colorClass === 'green' ? 'green-c' : 'violet-c'})">${r.n}</span>
-        <div class="dot ${colorClass}"></div>
-        <span class="chip-sz">${r.s[0]}</span>
-      </div>`;
-    }).join('');
-  }
-
-  if (n < 10) {
-    document.getElementById('predContent').innerHTML = `
-      <div class="empty-state">
-        <div class="big">🎯</div>
-        Need <b>${10 - n} more results</b> to activate prediction engine
-      </div>`;
-    document.getElementById('freqChart').innerHTML = '<div class="empty-state" style="padding:20px">No data yet</div>';
-    document.getElementById('patternBox').innerHTML = '<div class="empty-state" style="padding:20px">No data yet</div>';
-    return;
-  }
-
-  const a = analyze(results);
-  if (!a) return;
-
-  // PREDICTION
-  const colorClass = a.predColor.toLowerCase();
-  document.getElementById('predContent').innerHTML = `
-    <div class="pred-grid">
-      <div class="pred-card">
-        <div class="label">Predicted Number</div>
-        <div class="pred-value">${a.predNum}</div>
-        <div class="pred-sub">Alt: ${a.predNum2}</div>
-        <div class="confidence-bar"><div class="confidence-fill" style="width:${a.confidence}%;background:var(--accent)"></div></div>
-        <div class="pred-sub">${a.confidence}% confidence</div>
-      </div>
-      <div class="pred-card">
-        <div class="label">Predicted Size</div>
-        <div class="pred-value ${a.predSize === 'Big' ? 'green' : 'red'}">${a.predSize}</div>
-        <div class="pred-sub">${a.predSize === 'Big' ? '5-9' : '0-4'}</div>
-        <div class="confidence-bar"><div class="confidence-fill" style="width:${a.sizeConf}%;background:var(--accent3)"></div></div>
-        <div class="pred-sub">${a.sizeConf}% confidence</div>
-      </div>
-      <div class="pred-card">
-        <div class="label">Predicted Color</div>
-        <div class="pred-value ${colorClass}">${a.predColor}</div>
-        <div class="pred-sub">Color analysis</div>
-        <div class="confidence-bar"><div class="confidence-fill" style="width:${a.colorConf}%;background:var(--${colorClass === 'red' ? 'red-c' : colorClass === 'green' ? 'green-c' : 'violet-c'})"></div></div>
-        <div class="pred-sub">${a.colorConf}% confidence</div>
-      </div>
-    </div>
-    ${a.patternMatch !== null ? `<div class="algo-note">🔄 <b>Sequence Pattern Found!</b> Last 4 numbers appeared before — next was <b>${a.patternMatch}</b></div>` : ''}
-    <div class="algo-note">Algorithm: Weighted frequency (5x recent) + due number analysis + sequence pattern matching. Based on <b>${a.n} results</b>. More data = higher accuracy.</div>
-  `;
-
-  // FREQUENCY CHART
-  const maxFreq = Math.max(...a.numFreq);
-  const colors10 = ['#ff4466','#ff7744','#ffaa00','#aaff00','#00ff88','#00ffdd','#4488ff','#aa44ff','#ff44aa','#ff4466'];
-  document.getElementById('freqChart').innerHTML = Array(10).fill(0).map((_, i) => {
-    const pct = maxFreq > 0 ? (a.numFreq[i] / maxFreq * 100) : 0;
-    return `<div class="freq-row">
-      <div class="freq-num">${i}</div>
-      <div class="freq-bar-wrap">
-        <div class="freq-bar" style="width:${Math.max(pct,3)}%;background:${colors10[i]}">
-          ${pct > 15 ? i : ''}
+        <div class="phase-indicator" id="phaseIndicator">
+            📊 PHASE 1: Enter 10 outcomes to calibrate the engine
         </div>
-      </div>
-      <div class="freq-count">${a.numFreq[i]}</div>
-    </div>`;
-  }).join('');
 
-  // PATTERNS
-  const hotTags = a.hot.map(n => `<span class="trend-chip tag hot">🔥 ${n}</span>`).join('');
-  const coldTags = a.cold.map(n => `<span class="trend-chip tag cold">❄️ ${n}</span>`).join('');
-  
-  const colorPcts = {
-    Red: Math.round(a.colorFreq.Red / a.n * 100),
-    Green: Math.round(a.colorFreq.Green / a.n * 100),
-    Violet: Math.round(a.colorFreq.Violet / a.n * 100)
-  };
+        <div class="input-section">
+            <h3 style="text-align: center; margin-bottom: 15px;">Record Outcome</h3>
+            <div class="btn-group">
+                <button class="btn-red" onclick="addOutcome('RED')">🔴 RED</button>
+                <button class="btn-green" onclick="addOutcome('GREEN')">🟢 GREEN</button>
+            </div>
+            
+            <div class="history-display" id="historyDisplay"></div>
+            
+            <div class="pattern-alert" id="patternAlert">
+                ⚠️ Pattern Detected: Human bias incoming
+            </div>
 
-  document.getElementById('patternBox').innerHTML = `
-    <div class="streak-info">
-      <div style="margin-bottom:10px">
-        <div style="font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:5px">HOT NUMBERS (high recent freq)</div>
-        ${hotTags}
-      </div>
-      <div style="margin-bottom:10px">
-        <div style="font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:5px">COLD NUMBERS (overdue)</div>
-        ${coldTags}
-      </div>
-      <div style="margin-bottom:10px">
-        <div style="font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:5px">COLOR SPLIT</div>
-        <span class="trend-chip" style="color:var(--red-c)">🔴 ${colorPcts.Red}%</span>
-        <span class="trend-chip" style="color:var(--green-c)">🟢 ${colorPcts.Green}%</span>
-        <span class="trend-chip" style="color:var(--violet-c)">🟣 ${colorPcts.Violet}%</span>
-      </div>
-      <div>
-        <div style="font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:5px">SIZE SPLIT</div>
-        <span class="trend-chip" style="color:var(--green-c)">Big: ${Math.round(a.sizeFreq.Big/a.n*100)}%</span>
-        <span class="trend-chip" style="color:var(--red-c)">Small: ${Math.round(a.sizeFreq.Small/a.n*100)}%</span>
-      </div>
-      ${a.currentStreak > 2 ? `<div style="margin-top:10px;padding:8px;background:var(--surface2);border-radius:6px;font-size:11px">
-        ⚡ <b>${a.currentStreak}</b> in a row: <span style="color:var(--${a.lastColor.toLowerCase() === 'red' ? 'red-c' : a.lastColor.toLowerCase() === 'green' ? 'green-c' : 'violet-c'})">${a.lastColor}</span> — streak alert!
-      </div>` : ''}
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">Total Recorded</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="redCount">0</div>
+                    <div class="stat-label">Red Count</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="greenCount">0</div>
+                    <div class="stat-label">Green Count</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="streakCount">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="prediction-panel" id="predictionPanel">
+            <div class="prediction-title">🎯 CONTRARIAN ANALYSIS ACTIVE</div>
+            
+            <div class="mind-reading">
+                <strong>🧠 What Your Mind Is Thinking:</strong>
+                <p id="mindPrediction" style="margin-top: 10px; font-size: 1.1em;"></p>
+            </div>
+
+            <div class="contrarian-signal">
+                <strong>⚡ CONTRARIAN SIGNAL:</strong>
+                <p id="contrarianMove" style="margin-top: 10px; font-size: 1.3em; color: #27ae60;"></p>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <strong>Confidence Level:</strong>
+                <div class="confidence-meter">
+                    <div class="confidence-fill" id="confidenceFill">0%</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                <strong>📈 Pattern Analysis:</strong>
+                <ul id="patternAnalysis" style="margin-top: 10px; padding-left: 20px; line-height: 1.8;"></ul>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="reset-btn" onclick="resetAll()">🔄 Reset All Data</button>
+        </div>
+
+        <div class="walter-quote">
+            "The edge comes from knowing that most people are predictable when they think they're being unpredictable."<br>
+            — Billy Walters
+        </div>
     </div>
-  `;
 
-  document.getElementById('hAccuracy').textContent = a.confidence + '%';
-}
+    <script>
+        // Billy Walters Contrarian Logic Engine
+        let outcomes = [];
+        const MIN_SAMPLES = 10;
+        const MAX_HISTORY = 20;
 
-// ═══════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════
+        function addOutcome(color) {
+            if (outcomes.length >= MAX_HISTORY) {
+                outcomes.shift(); // Remove oldest
+            }
+            outcomes.push(color);
+            updateDisplay();
+            
+            if (outcomes.length >= MIN_SAMPLES) {
+                generatePrediction();
+            }
+        }
 
-function clearAll() {
-  if (!confirm('Clear ALL results? This cannot be undone.')) return;
-  state = { results: [], sessionCount: 0, predHistory: [] };
-  sessionAdded = 0;
-  saveData(state);
-  render();
-  showToast('All data cleared');
-}
+        function updateDisplay() {
+            const display = document.getElementById('historyDisplay');
+            display.innerHTML = outcomes.map((out, idx) => 
+                `<div class="outcome-dot ${out === 'RED' ? 'dot-red' : 'dot-green'}">${idx + 1}</div>`
+            ).join('');
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
-}
+            // Update stats
+            const redCount = outcomes.filter(o => o === 'RED').length;
+            const greenCount = outcomes.filter(o => o === 'GREEN').length;
+            const total = outcomes.length;
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('redCount').textContent = redCount;
+            document.getElementById('greenCount').textContent = greenCount;
+            
+            // Calculate streak
+            let streak = 0;
+            let streakColor = '';
+            for (let i = outcomes.length - 1; i >= 0; i--) {
+                if (i === outcomes.length - 1) {
+                    streakColor = outcomes[i];
+                    streak = 1;
+                } else if (outcomes[i] === streakColor) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            document.getElementById('streakCount').textContent = streak;
 
-// Enter key to add
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') addResult();
-});
+            // Update phase
+            const phaseEl = document.getElementById('phaseIndicator');
+            if (total < MIN_SAMPLES) {
+                phaseEl.innerHTML = `📊 PHASE 1: Enter ${MIN_SAMPLES - total} more outcome(s) to activate prediction engine`;
+                phaseEl.style.borderColor = '#f39c12';
+            } else {
+                phaseEl.innerHTML = '🎯 PHASE 2: Prediction Engine ACTIVE - Playing opposite to human bias';
+                phaseEl.style.borderColor = '#27ae60';
+            }
+        }
 
-// INIT
-render();
-</script>
+        function analyzePatterns() {
+            const last20 = outcomes.slice(-20);
+            const analysis = {
+                redCount: last20.filter(o => o === 'RED').length,
+                greenCount: last20.filter(o => o === 'GREEN').length,
+                last5: last20.slice(-5),
+                last3: last20.slice(-3),
+                lastOutcome: last20[last20.length - 1],
+                streakBeforeLast: 0,
+                alternationRate: 0,
+                doublePattern: false,
+                triplePattern: false
+            };
+
+            // Calculate alternation rate
+            let alternations = 0;
+            for (let i = 1; i < last20.length; i++) {
+                if (last20[i] !== last20[i-1]) alternations++;
+            }
+            analysis.alternationRate = alternations / (last20.length - 1);
+
+            // Check for streak before last
+            let streak = 1;
+            for (let i = last20.length - 2; i >= 0; i--) {
+                if (last20[i] === analysis.lastOutcome) streak++;
+                else break;
+            }
+            analysis.streakBeforeLast = streak;
+
+            // Pattern detection
+            const last3Str = analysis.last3.join(',');
+            const last5Str = analysis.last5.join(',');
+            
+            // Check for doubles pattern
+            if (last5Str.includes('RED,RED') || last5Str.includes('GREEN,GREEN')) {
+                analysis.doublePattern = true;
+            }
+            
+            // Check for triples
+            if (last3Str === 'RED,RED,RED' || last3Str === 'GREEN,GREEN,GREEN') {
+                analysis.triplePattern = true;
+            }
+
+            return analysis;
+        }
+
+        function generatePrediction() {
+            const analysis = analyzePatterns();
+            const panel = document.getElementById('predictionPanel');
+            panel.classList.add('active');
+
+            // BILLY WALTERS CONTRARIAN LOGIC
+            let humanPrediction = '';
+            let contrarianMove = '';
+            let confidence = 50;
+            let reasoning = [];
+
+            // Logic 1: Gambler's Fallacy (expecting opposite after streak)
+            if (analysis.streakBeforeLast >= 2) {
+                humanPrediction = analysis.lastOutcome === 'RED' ? 'GREEN' : 'RED';
+                contrarianMove = analysis.lastOutcome; // Play the STREAK, not against it
+                confidence += 15;
+                reasoning.push(`Streak of ${analysis.streakBeforeLast} detected - Human mind expects switch, but streaks cluster`);
+            }
+            
+            // Logic 2: Alternation Bias (if alternating, human expects continuation)
+            else if (analysis.alternationRate > 0.6) {
+                humanPrediction = analysis.lastOutcome === 'RED' ? 'GREEN' : 'RED';
+                contrarianMove = analysis.lastOutcome; // Repeat, don't alternate
+                confidence += 10;
+                reasoning.push(`High alternation rate (${(analysis.alternationRate*100).toFixed(0)}%) - Human expects pattern to continue`);
+            }
+            
+            // Logic 3: Recency Bias (last 3 same = expect change)
+            else if (analysis.last3.every(o => o === analysis.last3[0])) {
+                humanPrediction = analysis.lastOutcome === 'RED' ? 'GREEN' : 'RED';
+                contrarianMove = analysis.lastOutcome;
+                confidence += 20;
+                reasoning.push('Triple pattern - Human certainty of switch is highest here');
+            }
+            
+            // Logic 4: Balance Bias (expecting balance if skewed)
+            else if (Math.abs(analysis.redCount - analysis.greenCount) > 5) {
+                const majority = analysis.redCount > analysis.greenCount ? 'RED' : 'GREEN';
+                humanPrediction = majority === 'RED' ? 'GREEN' : 'RED';
+                contrarianMove = majority; // Play the majority, trend continues
+                confidence += 12;
+                reasoning.push(`Imbalance detected (${analysis.redCount}R vs ${analysis.greenCount}G) - Human chases "due" outcome`);
+            }
+            
+            // Logic 5: Pattern completion bias
+            else if (analysis.last5.join(',').includes('RED,GREEN,RED,GREEN') || 
+                     analysis.last5.join(',').includes('GREEN,RED,GREEN,RED')) {
+                humanPrediction = analysis.lastOutcome === 'RED' ? 'GREEN' : 'RED';
+                contrarianMove = analysis.lastOutcome;
+                confidence += 15;
+                reasoning.push('Alternating pattern detected - Human expects it to break');
+            }
+            
+            // Default: Random with slight bias
+            else {
+                humanPrediction = Math.random() > 0.5 ? 'RED' : 'GREEN';
+                contrarianMove = humanPrediction === 'RED' ? 'GREEN' : 'RED';
+                confidence = 55;
+                reasoning.push('No strong pattern - Playing pure contrarian');
+            }
+
+            // Show pattern alert if confidence high
+            const alert = document.getElementById('patternAlert');
+            if (confidence > 70) {
+                alert.style.display = 'block';
+                alert.textContent = `⚠️ STRONG BIAS DETECTED: ${Math.round(confidence)}% confidence in human predictability`;
+            } else {
+                alert.style.display = 'none';
+            }
+
+            // Update UI
+            document.getElementById('mindPrediction').innerHTML = 
+                `After seeing <strong>${analysis.lastOutcome}</strong>, your brain is wired to expect: <span style="color: ${humanPrediction === 'RED' ? '#e74c3c' : '#27ae60'}; font-size: 1.3em;">${humanPrediction}</span>`;
+            
+            document.getElementById('contrarianMove').innerHTML = 
+                `PLAY: <span style="font-size: 1.5em; text-transform: uppercase;">${contrarianMove}</span> 🔥`;
+            
+            document.getElementById('confidenceFill').style.width = `${confidence}%`;
+            document.getElementById('confidenceFill').textContent = `${Math.round(confidence)}%`;
+
+            const analysisList = document.getElementById('patternAnalysis');
+            analysisList.innerHTML = reasoning.map(r => `<li>${r}</li>`).join('') +
+                `<li><strong>Last 5:</strong> ${analysis.last5.join(' → ')}</li>` +
+                `<li><strong>Distribution:</strong> ${analysis.redCount} Red, ${analysis.greenCount} Green</li>` +
+                `<li><strong>Psychological Trap:</strong> ${getPsychTrap(analysis)}</li>`;
+        }
+
+        function getPsychTrap(analysis) {
+            if (analysis.streakBeforeLast >= 3) return "The 'Law of Averages' Fallacy";
+            if (analysis.alternationRate > 0.6) return "Pattern Continuation Bias";
+            if (Math.abs(analysis.redCount - analysis.greenCount) > 5) return "Gambler's Fallacy - 'It's Due'";
+            return "Overconfidence in Randomness";
+        }
+
+        function resetAll() {
+            outcomes = [];
+            document.getElementById('historyDisplay').innerHTML = '';
+            document.getElementById('predictionPanel').classList.remove('active');
+            document.getElementById('patternAlert').style.display = 'none';
+            updateDisplay();
+        }
+
+        // Initialize
+        updateDisplay();
+    </script>
 </body>
 </html>
