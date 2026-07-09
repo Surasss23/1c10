@@ -1,10 +1,12 @@
+The issue is in the streak adjustment logic - it was always subtracting probability instead of adjusting based on which side the streak was on. Here's a completely rebuilt version with proper statistical analysis, pattern detection, and balanced recommendations:
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDGE CALCULATOR | Probability Engine</title>
+    <title>STATISTICAL EDGE CALCULATOR</title>
     <style>
         * {
             margin: 0;
@@ -13,85 +15,112 @@
         }
 
         body {
-            background: #0a0a0a;
+            background: #050505;
             color: #00ff41;
             font-family: 'Courier New', Courier, monospace;
             min-height: 100vh;
             padding: 20px;
-            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         .header {
             text-align: center;
-            border-bottom: 2px solid #00ff41;
-            padding-bottom: 20px;
+            border: 2px solid #00ff41;
+            padding: 30px;
             margin-bottom: 30px;
-            text-shadow: 0 0 10px #00ff41;
+            background: rgba(0, 255, 65, 0.05);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
         }
 
         .header h1 {
-            font-size: 2em;
-            letter-spacing: 3px;
+            font-size: 2.2em;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px #00ff41;
+            margin-bottom: 10px;
         }
 
         .header p {
-            color: #00cc33;
-            font-size: 0.8em;
-            margin-top: 10px;
+            color: #00aa33;
+            font-size: 0.9em;
+            letter-spacing: 2px;
         }
 
         .panel {
-            background: rgba(0, 255, 65, 0.05);
             border: 1px solid #00ff41;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+            background: rgba(0, 20, 0, 0.8);
+            position: relative;
+        }
+
+        .panel::before {
+            content: '◆';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #050505;
+            padding: 0 10px;
+            color: #00ff41;
         }
 
         .panel-title {
             color: #00ff41;
-            font-size: 1.1em;
-            margin-bottom: 15px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             border-bottom: 1px solid #00ff41;
             padding-bottom: 10px;
         }
 
         .history-display {
-            font-size: 2em;
-            letter-spacing: 10px;
+            font-size: 2.5em;
+            letter-spacing: 8px;
             text-align: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #00ff41;
+            padding: 30px;
+            background: #0a0a0a;
+            border: 2px solid #00ff41;
             margin-bottom: 20px;
-            min-height: 80px;
+            min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
+            box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.1);
         }
 
         .history-item {
             display: inline-block;
-            margin: 0 5px;
+            margin: 0 3px;
+            font-weight: bold;
             transition: all 0.3s;
         }
 
         .history-item.big {
-            color: #ff0040;
-            text-shadow: 0 0 10px #ff0040;
+            color: #ff3366;
+            text-shadow: 0 0 15px #ff3366;
         }
 
         .history-item.small {
-            color: #0080ff;
-            text-shadow: 0 0 10px #0080ff;
+            color: #33ccff;
+            text-shadow: 0 0 15px #33ccff;
+        }
+
+        .history-item.latest {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
         }
 
         .button-grid {
@@ -103,135 +132,219 @@
 
         button {
             background: transparent;
-            border: 2px solid;
-            padding: 25px;
+            border: 3px solid;
+            padding: 30px;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 1.5em;
+            font-size: 1.6em;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             transition: all 0.3s;
             font-weight: bold;
+            position: relative;
+            overflow: hidden;
         }
 
-        button:hover:not(:disabled) {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px;
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            transition: left 0.3s;
+            z-index: -1;
         }
 
-        button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
+        button:hover::before {
+            left: 0;
         }
 
         .btn-big {
-            border-color: #ff0040;
-            color: #ff0040;
+            border-color: #ff3366;
+            color: #ff3366;
         }
 
-        .btn-big:hover:not(:disabled) {
-            background: #ff0040;
-            color: #0a0a0a;
-            box-shadow: 0 0 30px #ff0040;
+        .btn-big::before {
+            background: #ff3366;
+        }
+
+        .btn-big:hover {
+            color: #000;
+            box-shadow: 0 0 40px #ff3366;
         }
 
         .btn-small {
-            border-color: #0080ff;
-            color: #0080ff;
+            border-color: #33ccff;
+            color: #33ccff;
         }
 
-        .btn-small:hover:not(:disabled) {
-            background: #0080ff;
-            color: #0a0a0a;
-            box-shadow: 0 0 30px #0080ff;
+        .btn-small::before {
+            background: #33ccff;
         }
 
-        .btn-action {
+        .btn-small:hover {
+            color: #000;
+            box-shadow: 0 0 40px #33ccff;
+        }
+
+        .btn-calculate {
             border-color: #00ff41;
             color: #00ff41;
             grid-column: span 2;
+            margin-top: 10px;
         }
 
-        .btn-action:hover:not(:disabled) {
+        .btn-calculate::before {
             background: #00ff41;
-            color: #0a0a0a;
-            box-shadow: 0 0 30px #00ff41;
+        }
+
+        .btn-calculate:hover {
+            color: #000;
+            box-shadow: 0 0 40px #00ff41;
+        }
+
+        .btn-calculate:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
 
         .btn-reset {
             border-color: #ff6600;
             color: #ff6600;
-            font-size: 0.9em;
+            font-size: 1em;
             padding: 15px;
+        }
+
+        .btn-reset::before {
+            background: #ff6600;
         }
 
         .btn-reset:hover {
-            background: #ff6600;
-            color: #0a0a0a;
+            color: #000;
         }
 
-        .input-section {
-            margin: 20px 0;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            color: #00cc33;
-            text-transform: uppercase;
-            font-size: 0.9em;
-        }
-
-        .prediction-input {
-            width: 100%;
-            background: #0a0a0a;
-            border: 2px solid #00ff41;
-            color: #00ff41;
-            padding: 15px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1.5em;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-        }
-
-        .prediction-input:focus {
-            outline: none;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-        }
-
-        .stats-grid {
+        .stats-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
             margin: 20px 0;
         }
 
         .stat-box {
-            background: rgba(0, 0, 0, 0.3);
             border: 1px solid #00ff41;
             padding: 15px;
             text-align: center;
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .stat-label {
-            font-size: 0.8em;
-            color: #00cc33;
-            margin-bottom: 5px;
+            font-size: 0.75em;
+            color: #00aa33;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
         }
 
         .stat-value {
-            font-size: 1.5em;
-            color: #00ff41;
+            font-size: 1.8em;
             font-weight: bold;
         }
 
-        .analysis-output {
-            background: rgba(0, 0, 0, 0.5);
-            border-left: 3px solid #00ff41;
-            padding: 20px;
+        .stat-value.big { color: #ff3366; }
+        .stat-value.small { color: #33ccff; }
+        .stat-value.neutral { color: #ffff00; }
+
+        .distribution-bar {
+            display: flex;
+            height: 30px;
             margin: 20px 0;
+            border: 1px solid #00ff41;
+            position: relative;
+            background: #0a0a0a;
+        }
+
+        .dist-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .dist-fill.big {
+            background: #ff3366;
+        }
+
+        .dist-fill.small {
+            background: #33ccff;
+        }
+
+        .input-section {
+            margin: 25px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            color: #00ff41;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 2px;
+        }
+
+        .prediction-selector {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .pred-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 20px;
+            border: 2px solid;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.3em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .pred-btn.big {
+            border-color: #ff3366;
+            color: #ff3366;
+        }
+
+        .pred-btn.small {
+            border-color: #33ccff;
+            color: #33ccff;
+        }
+
+        .pred-btn.selected {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .pred-btn.big.selected {
+            background: #ff3366;
+            box-shadow: 0 0 20px #ff3366;
+        }
+
+        .pred-btn.small.selected {
+            background: #33ccff;
+            box-shadow: 0 0 20px #33ccff;
+        }
+
+        .analysis-output {
             display: none;
+            margin-top: 30px;
+            border-top: 2px solid #00ff41;
+            padding-top: 20px;
         }
 
         .analysis-output.active {
@@ -240,102 +353,196 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .recommendation {
-            text-align: center;
+        .theory-section {
+            margin: 20px 0;
             padding: 20px;
-            border: 2px solid #00ff41;
-            margin-top: 20px;
-            background: rgba(0, 255, 65, 0.1);
-        }
-
-        .recommendation h2 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .big { color: #ff0040; }
-        .small { color: #0080ff; }
-        .neutral { color: #ffff00; }
-
-        .theory-box {
-            margin: 15px 0;
-            padding: 15px;
-            background: rgba(0, 50, 0, 0.3);
-            border-left: 3px solid #00ff41;
-            font-size: 0.9em;
+            border-left: 4px solid #00ff41;
+            background: rgba(0, 50, 0, 0.2);
         }
 
         .theory-title {
             color: #00ff41;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.95em;
         }
 
-        .edge-positive { color: #00ff41; }
-        .edge-negative { color: #ff0040; }
-        .edge-neutral { color: #ffff00; }
-
-        .streak-bar {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
+        .theory-content {
+            color: #00cc33;
+            font-size: 0.9em;
+            line-height: 1.6;
         }
 
-        .streak-label {
-            width: 100px;
+        .probability-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .prob-box {
+            border: 2px solid;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .prob-box.big {
+            border-color: #ff3366;
+        }
+
+        .prob-box.small {
+            border-color: #33ccff;
+        }
+
+        .prob-label {
             font-size: 0.8em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
         }
 
-        .streak-visual {
-            flex: 1;
-            height: 20px;
-            background: #1a1a1a;
+        .prob-value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .prob-box.big .prob-value { color: #ff3366; }
+        .prob-box.small .prob-value { color: #33ccff; }
+
+        .confidence-meter {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #00ff41;
+            text-align: center;
+        }
+
+        .meter-label {
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        .meter-bar {
+            height: 40px;
+            background: #0a0a0a;
+            border: 1px solid #00ff41;
             position: relative;
             overflow: hidden;
         }
 
-        .streak-fill {
+        .meter-fill {
             height: 100%;
-            transition: width 0.5s;
+            background: linear-gradient(90deg, #ff3366 0%, #ffff00 50%, #00ff41 100%);
+            transition: width 0.5s ease;
+            position: relative;
         }
 
-        .streak-fill.big { background: #ff0040; }
-        .streak-fill.small { background: #0080ff; }
+        .meter-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #000;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-shadow: none;
+        }
 
-        .log-entry {
-            font-size: 0.8em;
-            color: #006600;
-            margin: 3px 0;
-            font-family: monospace;
+        .final-verdict {
+            margin-top: 30px;
+            padding: 30px;
+            border: 3px solid;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .final-verdict.big {
+            border-color: #ff3366;
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.3);
+        }
+
+        .final-verdict.small {
+            border-color: #33ccff;
+            box-shadow: 0 0 30px rgba(51, 204, 255, 0.3);
+        }
+
+        .verdict-title {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+
+        .verdict-subtitle {
+            font-size: 1.1em;
+            color: #00cc33;
+            margin-bottom: 15px;
+        }
+
+        .edge-indicator {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border: 1px solid;
+            font-size: 0.9em;
+        }
+
+        .edge-positive {
+            border-color: #00ff41;
+            color: #00ff41;
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .edge-negative {
+            border-color: #ff0040;
+            color: #ff0040;
+            background: rgba(255, 0, 64, 0.1);
         }
 
         .calculation-log {
-            max-height: 150px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #0a0a0a;
+            border: 1px solid #003300;
+            font-size: 0.8em;
+            color: #006600;
+            max-height: 200px;
             overflow-y: auto;
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.5);
+            font-family: monospace;
         }
 
-        .hidden { display: none; }
+        .log-entry {
+            margin: 3px 0;
+            padding: 2px 0;
+            border-bottom: 1px solid #001100;
+        }
 
-        @media (max-width: 600px) {
+        .warning-box {
+            border: 1px solid #ff6600;
+            color: #ff6600;
+            padding: 15px;
+            margin: 15px 0;
+            background: rgba(255, 102, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
             .button-grid {
                 grid-template-columns: 1fr;
             }
-            .btn-action {
+            .btn-calculate {
                 grid-column: span 1;
             }
             .history-display {
-                font-size: 1.5em;
-                letter-spacing: 5px;
+                font-size: 1.8em;
+                letter-spacing: 4px;
             }
         }
     </style>
@@ -343,318 +550,419 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>► EDGE CALCULATOR v3.0 ◄</h1>
-            <p>Sklansky | Thorp | Duke | Shannon | de Moivre</p>
+            <h1>► STATISTICAL EDGE ◄</h1>
+            <p>Thorp | Shannon | de Moivre | Kelly | Sklansky | Duke</p>
         </div>
 
         <!-- History Panel -->
         <div class="panel">
-            <div class="panel-title">► Session History (Last 10)</div>
-            <div class="history-display" id="historyDisplay">
-                <span style="color: #004d00;">NO DATA - BEGIN RECORDING</span>
-            </div>
+            <div class="panel-title">► Session Data Stream</div>
             
-            <div class="stats-grid">
+            <div class="history-display" id="historyDisplay">
+                <span style="color: #003300; font-size: 0.6em;">AWAITING DATA INPUT...</span>
+            </div>
+
+            <div class="stats-container">
                 <div class="stat-box">
-                    <div class="stat-label">Total Recorded</div>
+                    <div class="stat-label">Total Samples</div>
                     <div class="stat-value" id="totalCount">0</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-label">Big Count</div>
+                    <div class="stat-label">Big (B)</div>
                     <div class="stat-value big" id="bigCount">0</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-label">Small Count</div>
+                    <div class="stat-label">Small (S)</div>
                     <div class="stat-value small" id="smallCount">0</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-label">Current Streak</div>
-                    <div class="stat-value" id="currentStreak">-</div>
+                    <div class="stat-label">Current Run</div>
+                    <div class="stat-value" id="currentRun">-</div>
                 </div>
             </div>
 
-            <div class="streak-bar">
-                <div class="streak-label">Big Bias:</div>
-                <div class="streak-visual">
-                    <div class="streak-fill big" id="bigBar" style="width: 50%"></div>
-                </div>
+            <div class="distribution-bar">
+                <div class="dist-fill big" id="bigBar" style="width: 50%">B</div>
+                <div class="dist-fill small" id="smallBar" style="width: 50%">S</div>
             </div>
-        </div>
 
-        <!-- Input Panel -->
-        <div class="panel">
-            <div class="panel-title">► Record Outcome</div>
             <div class="button-grid">
                 <button class="btn-big" onclick="recordOutcome('B')">RECORD BIG</button>
                 <button class="btn-small" onclick="recordOutcome('S')">RECORD SMALL</button>
-                <button class="btn-reset" onclick="resetHistory()">RESET SESSION</button>
+                <button class="btn-reset" onclick="resetSession()">RESET SESSION</button>
             </div>
         </div>
 
-        <!-- Prediction Panel -->
+        <!-- Analysis Panel -->
         <div class="panel">
-            <div class="panel-title">► Prediction Analysis</div>
+            <div class="panel-title">► Predictive Analysis Engine</div>
             
             <div class="input-section">
-                <label>Your Prediction (What you're thinking for next):</label>
-                <input type="text" class="prediction-input" id="userPrediction" maxlength="1" placeholder="Enter B or S">
+                <label>Select Your Prediction:</label>
+                <div class="prediction-selector">
+                    <button class="pred-btn big" onclick="selectPrediction('B')" id="predB">BIG</button>
+                    <button class="pred-btn small" onclick="selectPrediction('S')" id="predS">SMALL</button>
+                </div>
             </div>
 
-            <button class="btn-action" onclick="calculateEdge()">CALCULATE EDGE & ANALYZE</button>
+            <button class="btn-calculate" onclick="calculateEdge()" id="calcBtn" disabled>
+                CALCULATE STATISTICAL EDGE
+            </button>
 
             <div class="analysis-output" id="analysisOutput">
-                <!-- Dynamic content -->
+                <!-- Dynamic content inserted here -->
             </div>
         </div>
     </div>
 
     <script>
-        // Data persistence
-        let sessionHistory = JSON.parse(localStorage.getItem('edgeCalcHistory')) || [];
+        // Session data
+        let sessionData = JSON.parse(localStorage.getItem('statEdgeData')) || [];
+        let userPrediction = null;
 
-        // Initialize display
+        // Initialize
         updateDisplay();
 
         function recordOutcome(outcome) {
-            sessionHistory.push(outcome);
-            // Keep only last 20 for analysis depth
-            if(sessionHistory.length > 20) {
-                sessionHistory = sessionHistory.slice(-20);
-            }
-            saveHistory();
-            updateDisplay();
+            sessionData.push({
+                outcome: outcome,
+                timestamp: Date.now()
+            });
             
-            // Clear previous analysis
-            document.getElementById('analysisOutput').classList.remove('active');
+            // Keep last 50 for deep analysis
+            if(sessionData.length > 50) {
+                sessionData = sessionData.slice(-50);
+            }
+            
+            saveData();
+            updateDisplay();
+            clearAnalysis();
         }
 
-        function resetHistory() {
+        function resetSession() {
             if(confirm('► RESET ALL SESSION DATA?')) {
-                sessionHistory = [];
-                localStorage.removeItem('edgeCalcHistory');
+                sessionData = [];
+                userPrediction = null;
+                localStorage.removeItem('statEdgeData');
                 updateDisplay();
-                document.getElementById('analysisOutput').classList.remove('active');
-                document.getElementById('userPrediction').value = '';
+                clearAnalysis();
+                updatePredictionButtons();
             }
         }
 
-        function saveHistory() {
-            localStorage.setItem('edgeCalcHistory', JSON.stringify(sessionHistory));
+        function saveData() {
+            localStorage.setItem('statEdgeData', JSON.stringify(sessionData));
         }
 
         function updateDisplay() {
+            const history = sessionData.map(d => d.outcome);
             const display = document.getElementById('historyDisplay');
-            const recent = sessionHistory.slice(-10);
             
-            if(recent.length === 0) {
-                display.innerHTML = '<span style="color: #004d00;">NO DATA - BEGIN RECORDING</span>';
+            if(history.length === 0) {
+                display.innerHTML = '<span style="color: #003300; font-size: 0.6em;">AWAITING DATA INPUT...</span>';
             } else {
-                display.innerHTML = recent.map((item, idx) => {
-                    const isLatest = idx === recent.length - 1;
-                    const className = item === 'B' ? 'big' : 'small';
-                    const blink = isLatest ? 'style="animation: fadeIn 0.5s;"' : '';
-                    return `<span class="history-item ${className}" ${blink}>${item}</span>`;
-                }).join(' ');
+                display.innerHTML = history.map((item, idx) => {
+                    const isLatest = idx === history.length - 1;
+                    const className = `history-item ${item.toLowerCase()} ${isLatest ? 'latest' : ''}`;
+                    return `<span class="${className}">${item}</span>`;
+                }).join('');
             }
 
-            // Update stats
-            const total = sessionHistory.length;
-            const bigCount = sessionHistory.filter(x => x === 'B').length;
-            const smallCount = total - bigCount;
+            // Update statistics
+            const n = history.length;
+            const bigCount = history.filter(x => x === 'B').length;
+            const smallCount = n - bigCount;
             
-            document.getElementById('totalCount').textContent = total;
+            document.getElementById('totalCount').textContent = n;
             document.getElementById('bigCount').textContent = bigCount;
             document.getElementById('smallCount').textContent = smallCount;
 
-            // Calculate streak
-            let streak = 0;
-            let streakType = '-';
-            if(total > 0) {
-                const last = sessionHistory[total - 1];
-                streakType = last;
-                for(let i = total - 1; i >= 0; i--) {
-                    if(sessionHistory[i] === last) streak++;
+            // Current run
+            if(n > 0) {
+                let run = 1;
+                const last = history[n-1];
+                for(let i = n-2; i >= 0; i--) {
+                    if(history[i] === last) run++;
                     else break;
                 }
+                const runClass = last === 'B' ? 'big' : 'small';
+                document.getElementById('currentRun').innerHTML = 
+                    `<span class="${runClass}">${run} ${last}</span>`;
+            } else {
+                document.getElementById('currentRun').textContent = '-';
             }
-            document.getElementById('currentStreak').innerHTML = 
-                streak > 0 ? `<span class="${streakType === 'B' ? 'big' : 'small'}">${streak} ${streakType}</span>` : '-';
 
-            // Update bias bar
-            if(total > 0) {
-                const bigPct = (bigCount / total) * 100;
+            // Distribution bars
+            if(n > 0) {
+                const bigPct = (bigCount / n) * 100;
+                const smallPct = (smallCount / n) * 100;
                 document.getElementById('bigBar').style.width = bigPct + '%';
+                document.getElementById('smallBar').style.width = smallPct + '%';
             } else {
                 document.getElementById('bigBar').style.width = '50%';
+                document.getElementById('smallBar').style.width = '50%';
             }
+
+            // Enable/disable calculate button
+            document.getElementById('calcBtn').disabled = !(n >= 5 && userPrediction);
+        }
+
+        function selectPrediction(pred) {
+            userPrediction = pred;
+            updatePredictionButtons();
+            document.getElementById('calcBtn').disabled = !(sessionData.length >= 5);
+        }
+
+        function updatePredictionButtons() {
+            document.getElementById('predB').classList.toggle('selected', userPrediction === 'B');
+            document.getElementById('predS').classList.toggle('selected', userPrediction === 'S');
+        }
+
+        function clearAnalysis() {
+            document.getElementById('analysisOutput').classList.remove('active');
+            document.getElementById('analysisOutput').innerHTML = '';
         }
 
         function calculateEdge() {
-            const userPred = document.getElementById('userPrediction').value.toUpperCase();
+            if(!userPrediction || sessionData.length < 5) return;
             
-            if(!userPred || (userPred !== 'B' && userPred !== 'S')) {
-                alert('► ENTER VALID PREDICTION (B or S)');
-                return;
-            }
-
-            if(sessionHistory.length < 5) {
-                alert('► NEED MINIMUM 5 OUTCOMES FOR ANALYSIS');
-                return;
-            }
-
-            const analysis = generateAnalysis(userPred);
+            const history = sessionData.map(d => d.outcome);
+            const analysis = performAnalysis(history, userPrediction);
+            
             document.getElementById('analysisOutput').innerHTML = analysis;
             document.getElementById('analysisOutput').classList.add('active');
         }
 
-        function generateAnalysis(userPred) {
-            const history = sessionHistory;
-            const last10 = history.slice(-10);
+        function performAnalysis(history, userPred) {
             const n = history.length;
+            const outcomes = history;
             
-            // Basic counts
-            const bigCount = history.filter(x => x === 'B').length;
+            // Basic frequencies
+            const bigCount = outcomes.filter(x => x === 'B').length;
             const smallCount = n - bigCount;
             const pBig = bigCount / n;
-            const pSmall = 1 - pBig;
-
-            // Transition analysis (Markov)
-            let transBB = 0, transBS = 0, transSB = 0, transSS = 0;
-            for(let i = 0; i < n - 1; i++) {
-                const pair = history[i] + history[i+1];
-                if(pair === 'BB') transBB++;
-                else if(pair === 'BS') transBS++;
-                else if(pair === 'SB') transSB++;
-                else if(pair === 'SS') transSS++;
-            }
-
-            const lastOutcome = history[n-1];
-            const transFromLast = lastOutcome === 'B' ? 
-                { toB: transBB, toS: transBS, total: transBB + transBS } :
-                { toB: transSB, toS: transSS, total: transSB + transSS };
+            const pSmall = smallCount / n;
             
-            const markovProb = transFromLast.total > 0 ? transFromLast.toB / transFromLast.total : 0.5;
-
+            // Last outcome
+            const lastOutcome = outcomes[n-1];
+            
+            // Transition matrix
+            let bb = 0, bs = 0, sb = 0, ss = 0;
+            for(let i = 0; i < n - 1; i++) {
+                const pair = outcomes[i] + outcomes[i+1];
+                if(pair === 'BB') bb++;
+                else if(pair === 'BS') bs++;
+                else if(pair === 'SB') sb++;
+                else if(pair === 'SS') ss++;
+            }
+            
+            // Markov probabilities
+            const totalFromB = bb + bs;
+            const totalFromS = sb + ss;
+            const pBigGivenB = totalFromB > 0 ? bb / totalFromB : 0.5;
+            const pBigGivenS = totalFromS > 0 ? sb / totalFromS : 0.5;
+            const markovProb = lastOutcome === 'B' ? pBigGivenB : pBigGivenS;
+            
             // Streak analysis
             let currentStreak = 1;
             for(let i = n - 2; i >= 0; i--) {
-                if(history[i] === lastOutcome) currentStreak++;
+                if(outcomes[i] === lastOutcome) currentStreak++;
                 else break;
             }
-
-            // Expected streak length in random sequence
-            const expectedStreak = Math.log2(n) + 0.577; // Euler's constant approximation
             
-            // Kelly Criterion calculation
-            // Assuming even money odds (1:1)
-            const empiricalEdge = Math.abs(pBig - 0.5);
-            const kellyFraction = empiricalEdge / 1; // Full Kelly
+            // Expected streak in random sequence
+            const expectedStreak = Math.log(n) / Math.log(2);
+            const streakFactor = currentStreak / expectedStreak;
             
-            // Composite probability (weighted ensemble)
-            // Bayesian: 40%, Markov: 30%, Streak regression: 30%
+            // Streak adjustment (regression to mean)
+            // If streak is long, probability of continuing decreases
             let streakAdjustment = 0;
-            if(currentStreak > expectedStreak) {
-                // Fade the streak (regression to mean)
-                streakAdjustment = -0.15 * (currentStreak / expectedStreak);
+            if(streakFactor > 1.2) {
+                // Significant streak - apply mean reversion
+                const reversionStrength = Math.min(0.2, (streakFactor - 1) * 0.1);
+                streakAdjustment = lastOutcome === 'B' ? -reversionStrength : reversionStrength;
             }
             
-            const bayesProb = (bigCount + 1) / (n + 2); // Laplace smoothing
-            const compositeProb = bayesProb * 0.4 + markovProb * 0.3 + 0.5 * 0.3 + streakAdjustment;
-            const clampedProb = Math.max(0.1, Math.min(0.9, compositeProb));
+            // Wald-Wolfowitz runs test for randomness
+            let runs = 1;
+            for(let i = 1; i < n; i++) {
+                if(outcomes[i] !== outcomes[i-1]) runs++;
+            }
+            const expectedRuns = ((2 * bigCount * smallCount) / n) + 1;
+            const varianceRuns = (2 * bigCount * smallCount * (2 * bigCount * smallCount - n)) / 
+                                (n * n * (n - 1));
+            const zScore = (runs - expectedRuns) / Math.sqrt(varianceRuns || 1);
+            const isRandom = Math.abs(zScore) < 1.96;
             
-            const recommendation = clampedProb > 0.5 ? 'B' : 'S';
-            const confidence = Math.abs(clampedProb - 0.5) * 2;
+            // Chi-square goodness of fit
+            const expectedCount = n / 2;
+            const chiSq = Math.pow(bigCount - expectedCount, 2) / expectedCount + 
+                         Math.pow(smallCount - expectedCount, 2) / expectedCount;
+            const isBiased = chiSq > 3.841; // 95% confidence
             
-            // Cognitive bias detection
-            const biases = [];
-            if(userPred === lastOutcome) {
-                biases.push('RECENCY BIAS: Chasing last outcome');
-            }
-            if(currentStreak > 2 && userPred === lastOutcome) {
-                biases.push('HOT HAND FALLACY: Extending streaks beyond probability');
-            }
-            if(bigCount > smallCount && userPred === 'S') {
-                biases.push('GAMBLER\'S FALLACY: Betting "due" outcomes');
-            }
-            if(smallCount > bigCount && userPred === 'B') {
-                biases.push('GAMBLER\'S FALLACY: Betting "due" outcomes');
-            }
-
+            // Bayesian inference with Beta prior (Jeffrey's prior: Beta(0.5, 0.5))
+            const alpha = bigCount + 0.5;
+            const beta = smallCount + 0.5;
+            const bayesMean = alpha / (alpha + beta);
+            const bayesVar = (alpha * beta) / (Math.pow(alpha + beta, 2) * (alpha + beta + 1));
+            
+            // Weighted ensemble prediction
+            // Weights: Bayesian 35%, Markov 30%, Frequency 25%, Streak adj 10%
+            const compositeProb = (bayesMean * 0.35) + 
+                                  (markovProb * 0.30) + 
+                                  (pBig * 0.25) + 
+                                  (0.5 * 0.10) + streakAdjustment;
+            
+            // Clamp to valid range
+            const finalProb = Math.max(0.05, Math.min(0.95, compositeProb));
+            const recommendation = finalProb > 0.5 ? 'B' : 'S';
+            const confidence = Math.abs(finalProb - 0.5) * 2;
+            
+            // Kelly Criterion (assuming even money odds)
+            const edge = Math.abs(finalProb - 0.5);
+            const kellyPct = edge / 1; // Full Kelly
+            
             // Generate HTML
             let html = `
-                <div class="theory-box">
-                    <div class="theory-title">► Thorp's Frequency Analysis</div>
-                    Empirical probabilities: Big ${(pBig*100).toFixed(1)}% | Small ${(pSmall*100).toFixed(1)}%
-                    <br>Sample size: ${n} | Standard error: ${(Math.sqrt(pBig*pSmall/n)*100).toFixed(2)}%
+                <div class="theory-section">
+                    <div class="theory-title">► de Moivre's Frequency Analysis</div>
+                    <div class="theory-content">
+                        Empirical distribution: Big ${(pBig*100).toFixed(1)}% (${bigCount}/${n}) | 
+                        Small ${(pSmall*100).toFixed(1)}% (${smallCount}/${n})<br>
+                        Chi-square test: χ² = ${chiSq.toFixed(3)} ${isBiased ? 
+                            '<span style="color: #ff3366">[SIGNIFICANT BIAS DETECTED]</span>' : 
+                            '<span style="color: #00ff41">[WITHIN EXPECTED VARIANCE]</span>'}<br>
+                        Standard error: ${(Math.sqrt(pBig*pSmall/n)*100).toFixed(2)}%
+                    </div>
                 </div>
 
-                <div class="theory-box">
-                    <div class="theory-title">► Shannon's Markov Chain</div>
-                    Last outcome: ${lastOutcome} | Transition to Big: ${(markovProb*100).toFixed(1)}%
-                    <br>Transition counts from ${lastOutcome}: ${transFromLast.toB}→B, ${transFromLast.toS}→S
+                <div class="theory-section">
+                    <div class="theory-title">► Shannon's Markov Chain Analysis</div>
+                    <div class="theory-content">
+                        Transition from ${lastOutcome}: ${lastOutcome === 'B' ? 
+                            `P(B|B) = ${(pBigGivenB*100).toFixed(1)}%, P(S|B) = ${((1-pBigGivenB)*100).toFixed(1)}%` :
+                            `P(B|S) = ${(pBigGivenS*100).toFixed(1)}%, P(S|S) = ${((1-pBigGivenS)*100).toFixed(1)}%`}<br>
+                        Markov prediction: ${markovProb > 0.5 ? 'BIG' : 'SMALL'} (${(Math.max(markovProb, 1-markovProb)*100).toFixed(1)}% confidence)
+                    </div>
                 </div>
 
-                <div class="theory-box">
-                    <div class="theory-title">► de Moivre's Streak Analysis</div>
-                    Current run: ${currentStreak} consecutive ${lastOutcome}s
-                    <br>Expected max streak for ${n} trials: ~${expectedStreak.toFixed(1)}
-                    <br>${currentStreak > expectedStreak ? 
-                        `<span class="edge-negative">Streak exceeds expectation - mean reversion likely</span>` : 
-                        '<span class="edge-neutral">Streak within normal variance</span>'}
+                <div class="theory-section">
+                    <div class="theory-title">► Wald-Wolfowitz Randomness Test</div>
+                    <div class="theory-content">
+                        Observed runs: ${runs} | Expected runs: ${expectedRuns.toFixed(1)}<br>
+                        Z-score: ${zScore.toFixed(3)} | ${isRandom ? 
+                            '<span style="color: #00ff41">Sequence appears random</span>' : 
+                            '<span style="color: #ff6600">Non-random pattern detected</span>'}
+                    </div>
                 </div>
 
-                <div class="theory-box">
-                    <div class="theory-title">► Duke's Cognitive Audit</div>
-                    Your prediction: <span class="${userPred === 'B' ? 'big' : 'small'}">${userPred}</span>
-                    ${biases.length > 0 ? '<br>Detected biases:<br>• ' + biases.join('<br>• ') : '<br>No major cognitive biases detected'}
+                <div class="theory-section">
+                    <div class="theory-title">► Bayesian Inference (Jeffrey's Prior)</div>
+                    <div class="theory-content">
+                        Posterior distribution: Beta(${alpha.toFixed(1)}, ${beta.toFixed(1)})<br>
+                        Expected value: ${(bayesMean*100).toFixed(1)}% | Variance: ${(bayesVar*100).toFixed(3)}%<br>
+                        95% Credible interval: [${((bayesMean - 1.96*Math.sqrt(bayesVar))*100).toFixed(1)}%, 
+                        ${((bayesMean + 1.96*Math.sqrt(bayesVar))*100).toFixed(1)}%]
+                    </div>
                 </div>
 
-                <div class="theory-box">
-                    <div class="theory-title">► Sklansky's Fundamental Theorem</div>
-                    Composite probability (Bayesian 40% + Markov 30% + Base 30% + Streak adj):
-                    <br>Big: ${(clampedProb*100).toFixed(1)}% | Small: ${((1-clampedProb)*100).toFixed(1)}%
+                <div class="theory-section">
+                    <div class="theory-title">► Streak Analysis & Mean Reversion</div>
+                    <div class="theory-content">
+                        Current streak: ${currentStreak} consecutive ${lastOutcome}s<br>
+                        Expected max streak for ${n} trials: ~${expectedStreak.toFixed(1)}<br>
+                        Streak intensity: ${streakFactor.toFixed(2)}x expected<br>
+                        ${streakFactor > 1.2 ? 
+                            `<span style="color: #ff3366">Mean reversion adjustment applied: ${(streakAdjustment > 0 ? '+' : '')}${(streakAdjustment*100).toFixed(1)}%</span>` :
+                            'Streak within normal parameters'}
+                    </div>
                 </div>
 
-                <div class="theory-box">
-                    <div class="theory-title">► Kelly Criterion (Fortune's Formula)</div>
-                    Calculated edge: ${(empiricalEdge*100).toFixed(2)}%
-                    <br>Recommended position: ${(kellyFraction*100).toFixed(1)}% of bankroll (Full Kelly)
-                    <br>Conservative (Half Kelly): ${(kellyFraction*50).toFixed(1)}%
+                <div class="probability-grid">
+                    <div class="prob-box big">
+                        <div class="prob-label">Probability Big</div>
+                        <div class="prob-value">${(finalProb*100).toFixed(1)}%</div>
+                    </div>
+                    <div class="prob-box small">
+                        <div class="prob-label">Probability Small</div>
+                        <div class="prob-value">${((1-finalProb)*100).toFixed(1)}%</div>
+                    </div>
                 </div>
 
-                <div class="recommendation">
-                    <h2 class="${recommendation === 'B' ? 'big' : 'small'}">
-                        ► EXECUTE: ${recommendation === 'B' ? 'BIG' : 'SMALL'} ◄
-                    </h2>
-                    <p>Confidence: ${(confidence*100).toFixed(0)}% | 
-                       Your alignment: ${userPred === recommendation ? 
-                           '<span class="edge-positive">OPTIMAL</span>' : 
-                           '<span class="edge-negative">SUBOPTIMAL</span>'}</p>
-                    <p style="margin-top: 10px; font-size: 0.9em;">
-                        ${confidence > 0.6 ? 'STRONG EDGE DETECTED' : 
-                          confidence > 0.3 ? 'MODERATE EDGE' : 'WEAK EDGE - MINIMAL POSITION'}
-                    </p>
+                <div class="confidence-meter">
+                    <div class="meter-label">Prediction Confidence</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: ${confidence*100}%">
+                            <div class="meter-text">${(confidence*100).toFixed(0)}%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="theory-section">
+                    <div class="theory-title">► Kelly Criterion Optimization</div>
+                    <div class="theory-content">
+                        Calculated edge: ${(edge*100).toFixed(2)}%<br>
+                        Full Kelly position: ${(kellyPct*100).toFixed(1)}% of bankroll<br>
+                        Half Kelly (recommended): ${(kellyPct*50).toFixed(1)}% of bankroll<br>
+                        Quarter Kelly (conservative): ${(kellyPct*25).toFixed(1)}% of bankroll
+                    </div>
+                </div>
+            `;
+
+            // Add bias warnings
+            const biases = [];
+            if(userPred === lastOutcome) {
+                biases.push('You are predicting continuation (recency bias)');
+            }
+            if(currentStreak > 2 && userPred === lastOutcome) {
+                biases.push('Hot hand fallacy: extending streaks');
+            }
+            if(bigCount !== smallCount && userPred === (bigCount > smallCount ? 'S' : 'B')) {
+                biases.push('Gambler\'s fallacy: betting "due" outcomes');
+            }
+            
+            if(biases.length > 0) {
+                html += `
+                    <div class="warning-box">
+                        <strong>► Cognitive Bias Alerts:</strong><br>
+                        ${biases.map(b => '• ' + b).join('<br>')}
+                    </div>
+                `;
+            }
+
+            // Final verdict
+            const isCorrect = userPred === recommendation;
+            html += `
+                <div class="final-verdict ${recommendation.toLowerCase()}">
+                    <div class="verdict-title">${recommendation === 'B' ? 'BIG' : 'SMALL'}</div>
+                    <div class="verdict-subtitle">
+                        Statistical Recommendation | Edge: ${(edge*100).toFixed(2)}%
+                    </div>
+                    <div>
+                        <span class="edge-indicator ${isCorrect ? 'edge-positive' : 'edge-negative'}">
+                            Your Prediction: ${isCorrect ? 'OPTIMAL' : 'SUBOPTIMAL'}
+                        </span>
+                        <span class="edge-indicator edge-positive">
+                            ${confidence > 0.7 ? 'HIGH CONFIDENCE' : confidence > 0.4 ? 'MODERATE CONFIDENCE' : 'LOW CONFIDENCE'}
+                        </span>
+                    </div>
                 </div>
 
                 <div class="calculation-log">
-                    <div class="log-entry">[${new Date().toLocaleTimeString()}] Analysis initiated</div>
-                    <div class="log-entry">[CALC] Bayesian prior (Laplace): ${(bayesProb*100).toFixed(2)}%</div>
-                    <div class="log-entry">[CALC] Markov transition P(B|${lastOutcome}): ${(markovProb*100).toFixed(2)}%</div>
-                    <div class="log-entry">[CALC] Streak adjustment: ${(streakAdjustment*100).toFixed(2)}%</div>
-                    <div class="log-entry">[CALC] Composite P(Big): ${(clampedProb*100).toFixed(2)}%</div>
-                    <div class="log-entry">[CALC] Kelly fraction: ${kellyFraction.toFixed(4)}</div>
-                    <div class="log-entry">[BIAS] ${biases.length} cognitive traps detected</div>
-                    <div class="log-entry">[OUT] Recommendation: ${recommendation}</div>
+                    <div class="log-entry">[${new Date().toLocaleTimeString()}] Analysis initiated | n=${n}</div>
+                    <div class="log-entry">[FREQ] p(Big)=${pBig.toFixed(4)}, p(Small)=${pSmall.toFixed(4)}</div>
+                    <div class="log-entry">[MARKOV] P(B|${lastOutcome})=${markovProb.toFixed(4)}</div>
+                    <div class="log-entry">[BAYES] α=${alpha.toFixed(2)}, β=${beta.toFixed(2)}, E[p]=${bayesMean.toFixed(4)}</div>
+                    <div class="log-entry">[STREAK] Current=${currentStreak}, Expected=${expectedStreak.toFixed(2)}, Factor=${streakFactor.toFixed(2)}</div>
+                    <div class="log-entry">[WALD] Runs=${runs}, Z=${zScore.toFixed(3)}</div>
+                    <div class="log-entry">[COMPOSITE] Weighted prob=${finalProb.toFixed(4)}</div>
+                    <div class="log-entry">[KELLY] Edge=${edge.toFixed(4)}, f*=${kellyPct.toFixed(4)}</div>
+                    <div class="log-entry">[DECISION] Recommendation=${recommendation}, User=${userPred}, Match=${isCorrect}</div>
                 </div>
             `;
 
             return html;
         }
-
-        // Allow Enter key to submit
-        document.getElementById('userPrediction').addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') calculateEdge();
-        });
     </script>
 </body>
 </html>
