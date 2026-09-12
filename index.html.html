@@ -1,252 +1,1417 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Bal Ganesh Mitra Mandal | Ganesh Utsav 2026</title>
-<meta name="description" content="Ganesh Utsav 2026 — celebrations, memories, events and moments of Bal Ganesh Mitra Mandal." />
-<meta name="theme-color" content="#F8F3E7" />
 
-<!-- Open Graph -->
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Bal Ganesh Mitra Mandal | Ganesh Utsav 2026" />
-<meta property="og:description" content="Ganesh Utsav 2026 — celebrations, memories, events and moments of Bal Ganesh Mitra Mandal." />
-<meta property="og:image" content="assets/hero.jpg" />
+  <meta charset="utf-8">
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Bal Ganesh Mitra Mandal | Ganesh Utsav 2026" />
-<meta name="twitter:description" content="Ganesh Utsav 2026 — celebrations, memories, events and moments of Bal Ganesh Mitra Mandal." />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
 
-<!-- Favicon: inline SVG diya-flame mark, no external file needed -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23F8F3E7'/%3E%3Cpath d='M16 6c3 4 5 7 5 10a5 5 0 11-10 0c0-3 2-6 5-10z' fill='%23A6402C'/%3E%3C/svg%3E" />
+  <meta
+    name="theme-color"
+    content="#f5f0e8"
+  >
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <title>
+    Bal Ganesh Mitra Mandal | Ganesh Utsav 2026
+  </title>
 
-<link rel="stylesheet" href="style.css" />
+  <meta
+    name="description"
+    content="Ganesh Utsav 2026 — celebrations, memories, events and moments of Bal Ganesh Mitra Mandal."
+  >
 
-<!--
-  External CDN note: this is the ONLY external script the site uses.
-  It generates the UPI donation QR code entirely in the browser (no server call,
-  no data leaves the device). Loaded with `defer` so it never blocks rendering.
--->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <!-- Open Graph / Social Sharing -->
+
+  <meta
+    property="og:title"
+    content="Bal Ganesh Mitra Mandal | Ganesh Utsav 2026"
+  >
+
+  <meta
+    property="og:description"
+    content="Ek nayi shuruaat, Bappa ke saath."
+  >
+
+  <meta
+    property="og:type"
+    content="website"
+  >
+
+  <meta
+    property="og:image"
+    content=""
+  >
+
+  <!-- Twitter / X -->
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  >
+
+  <meta
+    name="twitter:title"
+    content="Bal Ganesh Mitra Mandal | Ganesh Utsav 2026"
+  >
+
+  <meta
+    name="twitter:description"
+    content="Ganesh Utsav 2026 — celebrations, memories, events and moments."
+  >
+
+  <!-- Favicon placeholder -->
+
+  <link
+    rel="icon"
+    href="data:,"
+  >
+
+  <!-- Main stylesheet -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
 </head>
+
+
 <body>
 
-<a class="skip-link" href="#main">Skip to content</a>
 
-<!-- ============ NAVBAR ============ -->
-<header id="navbar" class="navbar">
-  <div class="navbar__inner">
-    <a href="#home" class="navbar__logo" aria-label="Bal Ganesh Mitra Mandal, home">
-      <span>BAL GANESH</span>
-      <span>MITRA MANDAL</span>
-    </a>
+  <!-- =====================================================
+       ACCESSIBILITY
+       ===================================================== -->
 
-    <nav class="navbar__nav" id="navLinks" aria-label="Primary">
-      <a href="#home">Home</a>
-      <a href="#utsav">Utsav</a>
-      <a href="#memories">Memories</a>
-      <a href="#people">Our People</a>
-      <a href="#events">Events</a>
-      <a href="#location">Location</a>
-      <a href="#auction" id="navAuctionLink">Auction</a>
+  <a
+    class="skip-link"
+    href="#main"
+  >
+    Skip to content
+  </a>
+
+
+
+  <!-- =====================================================
+       NAVBAR
+       ===================================================== -->
+
+  <header
+    class="site-header"
+    id="siteHeader"
+  >
+
+    <nav
+      class="nav container"
+      aria-label="Primary navigation"
+    >
+
+
+      <!-- LOGO -->
+
+      <a
+        class="brand"
+        href="#home"
+        aria-label="Bal Ganesh Mitra Mandal home"
+      >
+
+        <span>
+          BAL GANESH
+        </span>
+
+        <small>
+          MITRA MANDAL
+        </small>
+
+      </a>
+
+
+
+      <!-- MOBILE MENU BUTTON -->
+
+      <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="siteMenu"
+        aria-label="Open menu"
+      >
+
+        <span></span>
+        <span></span>
+
+      </button>
+
+
+
+      <!-- NAVIGATION -->
+
+      <div
+        class="nav-menu"
+        id="siteMenu"
+      >
+
+        <a href="#home">
+          Home
+        </a>
+
+        <a href="#utsav">
+          Utsav
+        </a>
+
+        <a href="#memories">
+          Memories
+        </a>
+
+        <a href="#people">
+          Our People
+        </a>
+
+        <a href="#events">
+          Events
+        </a>
+
+        <a href="#location">
+          Location
+        </a>
+
+        <a href="#auction">
+          Auction
+        </a>
+
+      </div>
+
     </nav>
 
-    <button class="navbar__toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</header>
+  </header>
 
-<!-- Mobile menu overlay -->
-<div class="mobile-menu" id="mobileMenu" hidden>
-  <nav aria-label="Mobile">
-    <a href="#home">Home</a>
-    <a href="#utsav">Utsav</a>
-    <a href="#memories">Memories</a>
-    <a href="#people">Our People</a>
-    <a href="#events">Events</a>
-    <a href="#location">Location</a>
-    <a href="#auction" id="navAuctionLinkMobile">Auction</a>
-  </nav>
-</div>
 
-<main id="main">
 
-  <!-- ============ 1. HERO ============ -->
-  <section id="home" class="hero">
-    <div class="hero__inner">
-      <div class="hero__text" data-reveal>
-        <span class="hero__badge">First year &middot; 2026</span>
-        <h1 class="hero__title">
-          <span>Bal Ganesh</span>
-          <span>Mitra Mandal</span>
-        </h1>
-        <p class="hero__subtitle">Ganesh Utsav 2026</p>
-        <p class="hero__tagline">Ek nayi shuruaat, Bappa ke saath.</p>
-        <div class="hero__ctas">
-          <a href="#utsav" class="btn btn--primary">Explore Utsav</a>
-          <a href="#memories" class="btn btn--ghost">View Memories</a>
-        </div>
-      </div>
-      <div class="hero__media" data-reveal>
-        <div class="hero__photo" id="heroPhoto"></div>
-        <div class="hero__tape" aria-hidden="true"></div>
-      </div>
-    </div>
-  </section>
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
 
-  <!-- ============ 3. COUNTDOWN / FESTIVAL STATUS ============ -->
-  <section id="status" class="status">
-    <div class="status__card" data-reveal>
-      <div class="status__label" id="statusLabel">Bappa Aagman</div>
-      <div class="status__date" id="statusDate">Sunday &middot; 13 September</div>
-      <div class="status__note" id="statusNote">Sham ko</div>
-      <div class="status__countdown" id="countdown" role="timer" aria-live="polite">
-        <div class="status__unit"><span id="cdDays">00</span><small>Days</small></div>
-        <div class="status__unit"><span id="cdHours">00</span><small>Hours</small></div>
-        <div class="status__unit"><span id="cdMins">00</span><small>Mins</small></div>
-        <div class="status__unit"><span id="cdSecs">00</span><small>Secs</small></div>
-      </div>
-      <p class="status__passed" id="statusPassed" hidden>Bappa aa chuke hain. Utsav shuru ho chuka hai. 🙏</p>
-    </div>
-  </section>
+  <main id="main">
 
-  <!-- ============ 4 & 5. UTSAV JOURNEY + UP NEXT ============ -->
-  <section id="utsav" class="utsav">
-    <div class="section-head" data-reveal>
-      <h2>Har Din Bappa Ke Naam.</h2>
-      <p>Bappa ke saath, har din khaas.</p>
-    </div>
 
-    <div class="up-next" id="upNext" data-reveal>
-      <!-- filled by script.js -->
-    </div>
 
-    <ol class="timeline" id="timeline" data-reveal>
-      <!-- filled by script.js -->
-    </ol>
-  </section>
+    <!-- ===================================================
+         HERO
+         =================================================== -->
 
-  <!-- ============ 6. MEMORIES ============ -->
-  <section id="memories" class="memories">
-    <div class="section-head" data-reveal>
-      <h2>Pehla Saal, Pehli Yaadein.</h2>
-      <p>Har tasveer mein ek pal, har pal mein Bappa.</p>
-    </div>
+    <section
+      class="hero section"
+      id="home"
+    >
 
-    <div class="memories__filters" id="memoryFilters" data-reveal>
-      <button class="filter-btn is-active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="photos">Photos</button>
-      <button class="filter-btn" data-filter="reels">Reels</button>
-      <button class="filter-btn" data-filter="aarti">Aarti</button>
-      <button class="filter-btn" data-filter="events">Events</button>
-      <button class="filter-btn" data-filter="bts">Behind the Scenes</button>
-    </div>
+      <div class="hero-copy container">
 
-    <div class="memories__grid" id="memoriesGrid" data-reveal>
-      <!-- filled by script.js -->
-    </div>
-  </section>
 
-  <!-- ============ 7. THIS YEAR ============ -->
-  <section id="first-year" class="first-year">
-    <div class="first-year__inner" data-reveal>
-      <div class="first-year__photo" id="groupPhoto"></div>
-      <div class="first-year__text">
-        <span class="first-year__eyebrow">Our first year</span>
-        <p class="first-year__big">2026</p>
-        <p class="first-year__lines">Pehla saal.<br />Pehli shuruaat.<br />Pehli yaadein.</p>
-        <p class="first-year__copy">
-          Har mandal ki apni ek shuruaat hoti hai — yeh hamari hai. Koi purani kahani nahi,
-          koi purana album nahi. Sirf ek chhota sa sapna, kuch haath jo saath aaye,
-          aur Bappa ka aashirwad. Ismein se hi ek naye parivaar ki kahani shuru hoti hai.
+        <p class="eyebrow">
+
+          GANESH UTSAV
+
+          <span id="heroYear">
+            2026
+          </span>
+
         </p>
-        <p class="first-year__future">More memories will join this story.</p>
+
+
+        <h1>
+
+          BAL GANESH
+
+          <br>
+
+          <em>
+            MITRA MANDAL
+          </em>
+
+        </h1>
+
+
+        <p class="hero-tagline">
+
+          Ek nayi shuruaat,
+          Bappa ke saath.
+
+        </p>
+
+
+        <span class="status-badge">
+
+          FIRST YEAR
+
+          <i></i>
+
+          2026
+
+        </span>
+
+
+        <div class="hero-actions">
+
+
+          <a
+            class="btn btn-primary"
+            href="#utsav"
+          >
+
+            Explore Utsav
+
+          </a>
+
+
+          <a
+            class="btn btn-ghost"
+            href="#memories"
+          >
+
+            View Memories
+
+          </a>
+
+
+        </div>
+
       </div>
-    </div>
-  </section>
 
-  <!-- ============ 8. OUR PEOPLE ============ -->
-  <section id="people" class="people">
-    <div class="section-head" data-reveal>
-      <h2>Bappa Ke Peeche, Hum Sab.</h2>
-      <p>The people behind the festival.</p>
-    </div>
-    <div class="people__groups" id="peopleGroups" data-reveal>
-      <!-- filled by script.js -->
-    </div>
-  </section>
 
-  <!-- ============ 9. EVENTS ============ -->
-  <section id="events" class="events">
-    <div class="section-head" data-reveal>
-      <h2>Events</h2>
-      <p>Saath mile toh tyohar banta hai.</p>
-    </div>
-    <div class="events__list" id="eventsList" data-reveal>
-      <!-- filled by script.js -->
-    </div>
-  </section>
 
-  <!-- ============ 10. LOCATION ============ -->
-  <section id="location" class="location">
-    <div class="location__inner" data-reveal>
-      <div class="location__text">
-        <h2>Find Bappa.</h2>
-        <p class="location__name" id="locationName">Bal Ganesh Mitra Mandal</p>
-        <p class="location__address" id="locationAddress"></p>
-        <a href="#" id="locationDirections" class="btn btn--primary" target="_blank" rel="noopener">Get Directions &rarr;</a>
+      <!-- HERO IMAGE -->
+
+      <div class="hero-art container">
+
+        <div
+          class="media-placeholder hero-media"
+          id="heroMedia"
+        >
+
+          <span>
+            ADD BAPPA PHOTO
+          </span>
+
+          <small>
+            heroImage in script.js
+          </small>
+
+        </div>
+
+
+        <div class="hero-note">
+
+          <span>
+            01
+          </span>
+
+          <p>
+
+            Pehla saal,
+
+            <br>
+
+            pehli yaadein.
+
+          </p>
+
+        </div>
+
       </div>
-      <div class="location__map" id="locationMap" aria-hidden="true"></div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         FESTIVAL MOMENT / COUNTDOWN
+         =================================================== -->
+
+    <section
+      class="moment section-sm"
+      id="moment"
+    >
+
+      <div class="container moment-grid">
+
+
+        <div>
+
+          <p class="eyebrow">
+            THE NEXT MOMENT
+          </p>
+
+          <h2 id="momentTitle">
+            Bappa Aagman
+          </h2>
+
+        </div>
+
+
+
+        <div class="moment-date">
+
+          <strong id="momentDate">
+
+            SUNDAY • 13 SEPTEMBER
+
+          </strong>
+
+          <span id="momentTime">
+
+            SHAM KO
+
+          </span>
+
+        </div>
+
+
+
+        <!-- LIVE COUNTDOWN -->
+
+        <div
+          class="countdown"
+          aria-live="polite"
+        >
+
+
+          <div>
+
+            <strong id="countDays">
+              --
+            </strong>
+
+            <span>
+              DAYS
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <strong id="countHours">
+              --
+            </strong>
+
+            <span>
+              HOURS
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <strong id="countMinutes">
+              --
+            </strong>
+
+            <span>
+              MIN
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <strong id="countSeconds">
+              --
+            </strong>
+
+            <span>
+              SEC
+            </span>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         UTSAV JOURNEY
+         =================================================== -->
+
+    <section
+      class="section"
+      id="utsav"
+    >
+
+      <div class="container">
+
+
+        <div class="section-heading reveal">
+
+          <p class="eyebrow">
+            THE JOURNEY
+          </p>
+
+
+          <h2>
+
+            Bappa Ke Saath,
+
+            <br>
+
+            <em>
+              Har Din Khaas.
+            </em>
+
+          </h2>
+
+
+          <p>
+            Har din Bappa ke naam,
+            har pal ek yaad.
+          </p>
+
+        </div>
+
+
+
+        <!-- UP NEXT -->
+
+        <div
+          class="up-next reveal"
+          id="upNext"
+        >
+
+        </div>
+
+
+
+        <!-- DAILY TIMELINE -->
+
+        <div
+          class="timeline"
+          id="dailySchedule"
+          aria-live="polite"
+        >
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         MEMORIES
+         =================================================== -->
+
+    <section
+      class="section section-dark"
+      id="memories"
+    >
+
+      <div class="container">
+
+
+        <div class="section-heading reveal">
+
+          <p class="eyebrow">
+            THE MEMORY BOOK
+          </p>
+
+
+          <h2>
+
+            Pehla Saal,
+
+            <br>
+
+            <em>
+              Pehli Yaadein.
+            </em>
+
+          </h2>
+
+
+          <p>
+
+            Har tasveer mein ek pal,
+            har pal mein Bappa.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- MEMORY FILTERS -->
+
+        <div
+          class="filter-row"
+          id="memoryFilters"
+          role="group"
+          aria-label="Memory filters"
+        >
+
+        </div>
+
+
+
+        <!-- MEMORY GRID -->
+
+        <div
+          class="memory-grid"
+          id="memoryGrid"
+        >
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         OUR FIRST YEAR
+         =================================================== -->
+
+    <section
+      class="first-year section"
+    >
+
+      <div
+        class="container first-year-grid"
+      >
+
+
+        <div class="reveal">
+
+          <p class="eyebrow">
+            THE BEGINNING
+          </p>
+
+
+          <div class="year-mark">
+            2026
+          </div>
+
+
+          <h2>
+
+            Pehla saal.
+
+            <br>
+
+            Pehli shuruaat.
+
+            <br>
+
+            <em>
+              Pehli yaadein.
+            </em>
+
+          </h2>
+
+
+          <p class="body-copy">
+
+            Har kahaani ki ek pehli line hoti hai.
+            Hamari kahaani iss saal Bappa ke saath
+            shuru ho rahi hai — saath, seva aur
+            khushiyon ke saath.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- GROUP PHOTO -->
+
+        <div
+          class="media-placeholder group-media reveal"
+        >
+
+          <span>
+            ADD GROUP PHOTO
+          </span>
+
+          <small>
+            groupPhoto in SITE_CONFIG
+          </small>
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- FUTURE YEARS -->
+
+      <div
+        class="future-note container"
+      >
+
+        <span>
+          2026 — CHAPTER ONE
+        </span>
+
+
+        <p>
+          More memories will join this story.
+        </p>
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- ===================================================
+         OUR PEOPLE
+         =================================================== -->
+
+    <section
+      class="section people-section"
+      id="people"
+    >
+
+      <div class="container">
+
+
+        <div class="section-heading reveal">
+
+          <p class="eyebrow">
+            THE PEOPLE
+          </p>
+
+
+          <h2>
+
+            Bappa Ke Peeche,
+
+            <br>
+
+            <em>
+              Hum Sab.
+            </em>
+
+          </h2>
+
+
+          <p>
+            Ek mandal, kai haath, ek dil.
+          </p>
+
+        </div>
+
+
+
+        <!-- PEOPLE GENERATED BY JS -->
+
+        <div
+          class="people-grid"
+          id="peopleGrid"
+        >
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         EVENTS
+         =================================================== -->
+
+    <section
+      class="section events-section"
+      id="events"
+    >
+
+      <div class="container">
+
+
+        <div class="section-heading reveal">
+
+          <p class="eyebrow">
+            WHAT'S HAPPENING
+          </p>
+
+
+          <h2>
+
+            Utsav,
+
+            <em>
+              Ek Saath.
+            </em>
+
+          </h2>
+
+        </div>
+
+
+
+        <!-- EVENT LIST GENERATED BY JS -->
+
+        <div
+          class="event-list"
+          id="eventList"
+        >
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         LOCATION
+         =================================================== -->
+
+    <section
+      class="location section-sm"
+      id="location"
+    >
+
+      <div class="container location-grid">
+
+
+        <div>
+
+          <p class="eyebrow">
+            COME SAY BAPPA MORYA
+          </p>
+
+
+          <h2>
+
+            Find
+
+            <br>
+
+            <em>
+              Bappa.
+            </em>
+
+          </h2>
+
+        </div>
+
+
+
+        <div class="location-card">
+
+
+          <p id="locationName">
+
+            Bal Ganesh Mitra Mandal
+
+          </p>
+
+
+          <address id="locationAddress">
+
+            Address will be added here.
+
+          </address>
+
+
+          <a
+            class="btn btn-primary"
+            id="directionsLink"
+            href="#"
+            target="_blank"
+            rel="noopener"
+          >
+
+            Get Directions →
+
+          </a>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         INSTAGRAM
+         =================================================== -->
+
+    <section
+      class="social section-sm"
+    >
+
+      <div
+        class="container social-inner"
+      >
+
+
+        <div>
+
+          <p class="eyebrow">
+            FOLLOW THE MEMORIES
+          </p>
+
+
+          <h2>
+
+            Moments worth
+
+            <br>
+
+            <em>
+              remembering.
+            </em>
+
+          </h2>
+
+        </div>
+
+
+
+        <a
+          class="social-link"
+          id="instagramLink"
+          href="#"
+          target="_blank"
+          rel="noopener"
+          aria-label="Open Instagram"
+        >
+
+          <span>
+            Instagram
+          </span>
+
+          <b>
+            ↗
+          </b>
+
+        </a>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         LADDU AUCTION
+         ===================================================
+         Hidden automatically when enabled:false
+         =================================================== -->
+
+    <section
+      class="section auction-section"
+      id="auction"
+      hidden
+    >
+
+      <div
+        class="container auction-card"
+      >
+
+
+        <p class="eyebrow">
+          A LITTLE PIECE OF THE FESTIVAL
+        </p>
+
+
+        <h2>
+
+          Bappa Ka Prasad,
+
+          <br>
+
+          <em>
+            Yaadon Ka Hissa.
+          </em>
+
+        </h2>
+
+
+        <p
+          class="auction-title"
+          id="auctionTitle"
+        >
+          Laddu Auction
+        </p>
+
+
+        <p
+          id="auctionDescription"
+        >
+        </p>
+
+
+        <div class="auction-meta">
+
+
+          <span>
+
+            STARTING BID
+
+            <b id="startingBid">
+              ₹0
+            </b>
+
+          </span>
+
+
+          <span>
+
+            CURRENT BID
+
+            <b id="currentBid">
+              ₹0
+            </b>
+
+          </span>
+
+
+          <span>
+
+            ENDS
+
+            <b id="auctionEnd">
+              —
+            </b>
+
+          </span>
+
+
+        </div>
+
+
+        <p class="fine-print">
+
+          Frontend display only.
+          Real bidding and verification
+          require a backend.
+
+        </p>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         DONATION
+         ===================================================
+         Entire section hidden when enabled:false
+         =================================================== -->
+
+    <section
+      class="section donation-section"
+      id="donation"
+      hidden
+    >
+
+      <div
+        class="container donation-grid"
+      >
+
+
+        <div>
+
+          <p class="eyebrow">
+            SUPPORT THE UTSAV
+          </p>
+
+
+          <h2>
+
+            Donate
+
+            <br>
+
+            <em>
+              To Bappa.
+            </em>
+
+          </h2>
+
+
+          <p class="body-copy">
+
+            Aapka sahyog is pehli shuruaat
+            ka hissa ban sakta hai.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- DONATION CARD -->
+
+        <div class="donation-card">
+
+
+          <!-- QR -->
+
+          <div class="qr-wrap">
+
+            <div
+              id="qrCode"
+              class="qr-code"
+              aria-label="UPI donation QR code"
+            >
+
+            </div>
+
+
+            <span>
+              SCAN & DONATE
+            </span>
+
+          </div>
+
+
+
+          <!-- DONATION DETAILS -->
+
+          <div class="donation-info">
+
+
+            <p id="merchantName">
+
+              Bal Ganesh Mitra Mandal
+
+            </p>
+
+
+            <p class="upi-label">
+
+              UPI ID
+
+              <strong id="upiDisplay">
+                —
+              </strong>
+
+            </p>
+
+
+
+            <!-- AMOUNT BUTTONS -->
+
+            <div
+              class="amounts"
+              id="amounts"
+            >
+
+
+              <button
+                type="button"
+                data-amount="100"
+              >
+                ₹100
+              </button>
+
+
+              <button
+                type="button"
+                data-amount="500"
+              >
+                ₹500
+              </button>
+
+
+              <button
+                type="button"
+                data-amount="1000"
+              >
+                ₹1000
+              </button>
+
+
+              <button
+                type="button"
+                data-amount="custom"
+              >
+                Custom
+              </button>
+
+
+            </div>
+
+
+
+            <!-- CUSTOM AMOUNT -->
+
+            <label
+              class="custom-amount"
+              id="customAmountWrap"
+              hidden
+            >
+
+              Custom amount
+
+
+              <input
+                id="customAmount"
+                type="number"
+                min="1"
+                inputmode="decimal"
+                placeholder="Enter amount"
+              >
+
+            </label>
+
+
+
+            <!-- REFERENCE -->
+
+            <div class="donation-ref">
+
+
+              <span>
+                REFERENCE
+              </span>
+
+
+              <strong
+                id="donationReference"
+              >
+                —
+              </strong>
+
+
+              <button
+                id="copyReference"
+                type="button"
+              >
+                Copy
+              </button>
+
+
+            </div>
+
+
+
+            <!-- UPI BUTTON -->
+
+            <a
+              class="btn btn-primary full"
+              id="upiButton"
+              href="#"
+            >
+
+              Open UPI App
+
+            </a>
+
+
+            <p class="fine-print">
+
+              Please complete the payment
+              in your UPI app.
+              Payment is not verified
+              on this website.
+
+            </p>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="footer">
+
+
+    <div
+      class="container footer-inner"
+    >
+
+
+      <div>
+
+
+        <div class="brand">
+
+          BAL GANESH
+
+          <small>
+            MITRA MANDAL
+          </small>
+
+        </div>
+
+
+        <p>
+
+          Ek nayi shuruaat,
+          Bappa ke saath.
+
+        </p>
+
+
+      </div>
+
+
+
+      <div class="footer-right">
+
+
+        <a
+          id="footerInstagram"
+          href="#"
+          target="_blank"
+          rel="noopener"
+        >
+
+          Instagram ↗
+
+        </a>
+
+
+        <span
+          id="footerLocation"
+        >
+
+          Location
+
+        </span>
+
+
+        <span
+          id="footerYear"
+        >
+
+          2026
+
+        </span>
+
+
+      </div>
+
+
     </div>
-  </section>
 
-  <!-- ============ 11. SOCIAL ============ -->
-  <section id="social" class="social">
-    <div class="section-head" data-reveal>
-      <h2>Follow The Memories.</h2>
-      <p>Har din ki jhalak, Instagram par.</p>
+
+
+    <div
+      class="container footer-bottom"
+    >
+
+      Ganpati Bappa Morya 🙏
+
     </div>
-    <div class="social__inner" data-reveal>
-      <a href="#" id="instagramLink" class="btn btn--primary" target="_blank" rel="noopener">Follow on Instagram</a>
-      <div class="social__grid" id="socialGrid"></div>
+
+
+  </footer>
+
+
+
+  <!-- =====================================================
+       LIGHTBOX
+       ===================================================== -->
+
+  <div
+    class="lightbox"
+    id="lightbox"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-label="Memory viewer"
+  >
+
+
+    <button
+      class="lightbox-close"
+      id="lightboxClose"
+      type="button"
+      aria-label="Close viewer"
+    >
+      ×
+    </button>
+
+
+
+    <button
+      class="lightbox-prev"
+      id="lightboxPrev"
+      type="button"
+      aria-label="Previous memory"
+    >
+      ←
+    </button>
+
+
+
+    <div
+      class="lightbox-content"
+      id="lightboxContent"
+    >
+
     </div>
-  </section>
 
-  <!-- ============ 12. LADDU AUCTION (mounted only if enabled) ============ -->
-  <div id="auctionMount"></div>
 
-  <!-- ============ 13. DONATION (mounted only if enabled) ============ -->
-  <div id="donationMount"></div>
 
-</main>
+    <button
+      class="lightbox-next"
+      id="lightboxNext"
+      type="button"
+      aria-label="Next memory"
+    >
+      →
+    </button>
 
-<!-- ============ FOOTER ============ -->
-<footer class="footer">
-  <div class="footer__inner">
-    <p class="footer__name">Bal Ganesh Mitra Mandal</p>
-    <p class="footer__tagline">Ek nayi shuruaat, Bappa ke saath.</p>
-    <p class="footer__morya">Ganpati Bappa Morya 🙏</p>
-    <div class="footer__meta">
-      <span id="footerYear">2026</span>
-      <a href="#" id="footerInstagram" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
-      <a href="#location" id="footerLocation">Location</a>
-    </div>
+
   </div>
-</footer>
 
-<!-- ============ LIGHTBOX ============ -->
-<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Memory viewer">
-  <button class="lightbox__close" id="lightboxClose" aria-label="Close">&times;</button>
-  <div class="lightbox__content" id="lightboxContent"></div>
-  <div class="lightbox__caption" id="lightboxCaption"></div>
-</div>
 
-<script src="script.js"></script>
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+
+  <script src="script.js"></script>
+
+
 </body>
+
 </html>
