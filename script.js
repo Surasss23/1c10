@@ -1,4 +1,4 @@
-/* =========================================================
+  /* =========================================================
    BAL GANESH MITRA MANDAL — CONFIG + DATA
    =========================================================
    IMPORTANT:
@@ -358,7 +358,7 @@ const AUCTION_CONFIG = {
 
 const DONATION_CONFIG = {
 
-  enabled: false,
+  enabled: true,
 
   // Example:
   // "example@upi"
